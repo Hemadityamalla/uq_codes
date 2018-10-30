@@ -12,3 +12,4 @@ histogram(X,nbins,'Normalization','pdf');
 hold on;
 x = linspace(-10,10,N);
 plot(x,(1/sqrt(2*pi*sigmasq))*exp(-(x - mu).^2./(2*sigmasq)));
+
