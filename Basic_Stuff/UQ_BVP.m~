@@ -31,16 +31,7 @@ j = j+1;
 % hold on ;
 end
 figure(2)
-plot(mc_mean,'b.-','LineWidth',1);
+plot(mc_mean,'bo-','LineWidth',1);
 hold on;
 mean_temp = 0.5;
-plot(mean_temp*ones(length(mc_mean),1),'r','LineWidth',2);
-figure(3)
-n = ones(length(mc_mean),1);
-error = abs(mc_mean - mean_temp);
-loglog(n,error,'ro-');
-hold on;
-y = polyval(polyfit(log(n),log(error),1),log(n));
-loglog(n,exp(y),'b','LineWidth',2);
-xlabel('n'); ylabel('|estimated_{\mu_y} - exact_{\mu_y}|');
-legend('|estimated_{\mu_y} - exact_{\mu_y}|','line with slope -1/2');
+plot(mean_temp*ones(length(mc_mean),1),','LineWidth',2);
