@@ -6,15 +6,10 @@ xmid = ( x(1:end-1) + x (2:end) ) / 2.0 ;
 T_left = 1;
 c0 = 1.0 ;
 % % Define phi
-d = 10; sigma = 1 ;
+d = 1; sigma = 1 ;
 
 
 mc_mean = [];
-
-
-%One rv diffusion constant- log normal
-mu = 0;
-sigma = 0.75;
 
 n = [1:5:1e4];
 for sim = n
