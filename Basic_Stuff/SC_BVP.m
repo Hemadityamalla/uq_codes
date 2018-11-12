@@ -49,12 +49,12 @@ end
 
 %Evaluating the coefficients
 
-%Hermite polynomials
+%Hermite polynomials(probabilist)
 h0 = @(xi) ones(size(xi));
-h1 = @(xi) 2*xi;
-h2 = @(xi) 4*xi.^2 - 2.0;
-h3 = @(xi) 8*xi.^3 - 12.0*xi;
-h4 = @(xi) 16*xi.^4 - 48*xi.^2 + 12;
+h1 = @(xi) xi;
+h2 = @(xi) xi.^2 - 1.0;
+h3 = @(xi) xi.^3 - 3.0*xi;
+h4 = @(xi) xi.^4 - 6.0*xi.^2 + 3.0;
 
 
 T_0 = sum(w.*h0(xi).*T_half')/(factorial(0)*sqrt(pi));
