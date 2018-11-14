@@ -11,7 +11,7 @@ c0 = 1.0 ;
 sigma = 1 ;
 
 %Gauss-Hermite quadrature points (Q points)
-Q = 25;
+Q = 30;
 [xi,w] = gaussQuad(Q,'Hermite');
 
 
@@ -38,8 +38,20 @@ h1 = @(xi) xi;
 h2 = @(xi) xi.^2 - 1.0;
 h3 = @(xi) xi.^3 - 3.0*xi;
 h4 = @(xi) xi.^4 - 6.0*xi.^2 + 3.0;
+h5 = @(xi) xi.^5 - 10.0*xi.^3 + 15.0*xi;
 
-T_0 = sum(w.*h0(xi).*T_half)/(factorial(0));
-T_1 = sum(w.*h1(xi).*T_half)/(factorial(1));
-T_2 = sum(w.*h2(xi).*T_half)/(factorial(2));
-T_3 = sum(w.*h3(xi).*T_half)/(factorial(3));
+T_0 = sum(w.*hermite(xi,0).*T_half)/(factorial(0));
+T_1 = sum(w.*hermite(xi,1).*T_half)/(factorial(1));
+T_2 = sum(w.*hermite(xi,2).*T_half)/(factorial(2));
+T_3 = sum(w.*hermite(xi,3).*T_half)/(factorial(3));
+T_4 = sum(w.*hermite(xi,4).*T_half)/(factorial(4));
+T_5 = sum(w.*hermite(xi,5).*T_half)/(factorial(5));
+
+%Visualizing the function(T_half) and the approximated function
+ip = (xi(1):0.01:xi(end))';
+T_half_approx = hermite(ip,0)*T_0 + hermite(ip,1)*T_1 + hermite(ip,2)*T_2 + hermite(ip,3)*T_3 + hermite(ip,4)*T_4 + hermite(ip,5)*T_5; 
+
+plot(xi,T_half,'bo');
+hold on;
+plot(ip,T_half_approx,'r');
+xlim([-10,10]);
