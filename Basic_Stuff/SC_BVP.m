@@ -5,15 +5,11 @@ x = [0:dx:1]';
 xmid = ( x(1:end-1) + x (2:end) ) / 2.0 ;
 T_left = 1;
 c0 = 1.0 ;
-% %Define phi- one random variable for SC
-% d = 1; 
-% xi = randn(d,1);
 sigma = 1 ;
 
 %Gauss-Hermite quadrature points (Q points)
 Q = 30;
 [xi,w] = gaussQuad(Q,'Hermite');
-
 
 %Deterministic solver
 
@@ -30,28 +26,16 @@ for i=[1:1:Q]
     T_half(i,1) = u(N/2);
 end
 
-%Evaluating the coefficients
+%Evaluating the coefficients and assembling the final function
+ip = (xi(1):0.01:xi(end))'; %Evaluation points
+N = 4; %Number of terms in the polynomial approximation
+T_hat = zeros(N,1); %Expansion coefficients array
+T_approx = 0; %Final approximated function variable
+for i=1:N+1
+    T_hat(i,1) = sum(w.*hermite(xi,i-1).*T_half)/(factorial(i-1));
+    T_approx = T_approx + T_hat(i,1)*hermite(ip,i-1);
+end
 
-%Hermite polynomials(probabilist)
-h0 = @(xi) ones(size(xi));
-h1 = @(xi) xi;
-h2 = @(xi) xi.^2 - 1.0;
-h3 = @(xi) xi.^3 - 3.0*xi;
-h4 = @(xi) xi.^4 - 6.0*xi.^2 + 3.0;
-h5 = @(xi) xi.^5 - 10.0*xi.^3 + 15.0*xi;
-
-T_0 = sum(w.*hermite(xi,0).*T_half)/(factorial(0));
-T_1 = sum(w.*hermite(xi,1).*T_half)/(factorial(1));
-T_2 = sum(w.*hermite(xi,2).*T_half)/(factorial(2));
-T_3 = sum(w.*hermite(xi,3).*T_half)/(factorial(3));
-T_4 = sum(w.*hermite(xi,4).*T_half)/(factorial(4));
-T_5 = sum(w.*hermite(xi,5).*T_half)/(factorial(5));
-
-%Visualizing the function(T_half) and the approximated function
-ip = (xi(1):0.01:xi(end))';
-T_half_approx = hermite(ip,0)*T_0 + hermite(ip,1)*T_1 + hermite(ip,2)*T_2 + hermite(ip,3)*T_3 + hermite(ip,4)*T_4 + hermite(ip,5)*T_5; 
-
-plot(xi,T_half,'bo');
+plot(xi,T_half,'.-','Linewidth',1,'MarkerSize',8);
 hold on;
-plot(ip,T_half_approx,'r');
-xlim([-10,10]);
+plot(ip, T_approx,'r','LineWidth',1);
