@@ -1,11 +1,11 @@
-%clear;clc;
+clear;clc;
 
 %Defining the 1D Genz functions
 
-%g = @(xi) exp(-0.5*abs(xi - 0.5)); %continuous 
+g = @(xi) exp(-0.5*abs(xi - 0.5)); %continuous 
 %g = @(xi) 1.0./(0.5^(-2) + (xi - 0.5).^2); %Product Peak 
 %g = @(xi) (1 + 0.5*xi).^(-2); %Corner peak 
-%g = @(xi) (xi > 0.5)*0 + (xi < 0.5).*exp(0.5*xi); %Discontinuous
+%g = @(xi) (xi > 0.5)*0 + (xi >= 0.5).*exp(0.5*xi); %Discontinuous
 %g = @(xi) exp(-(0.5^2)*(xi - 0.5).^2); %Gaussian peak
 %g = @(xi) cos(2*pi*0.5 + 0.5*xi); %Oscillatory
 
@@ -16,15 +16,15 @@
 
 
 
-%Gauss-Hermite quadrature points (Q points)
-Q = 14;
+%Gauss-Hermite quadrature points (Q-points)
+Q = 20;
 [xi,w] = gaussQuad(Q,'Hermite');
-g_pts = g(xi);
+g_pts = sin(xi)%g(xi); %Integrates polynomials exactly, but not the Genz functions!
 
 ip = (xi(1):0.01:xi(end))'; %Interpolating points
 
 %Number of terms in the polynomial approximation
-N = 14;
+N = 5;
 g_hat = zeros(N,1);
 g_approx = 0;
 for i=1:N+1
@@ -32,9 +32,9 @@ for i=1:N+1
     g_approx = g_approx + g_hat(i,1)*hermite(ip,i-1);
 end
 
-plot(xi,g_pts,'.-');
+plot(xi,g_pts,'b.-');
 hold on;
 plot(ip, g_approx,'r');
-xlim([-5,5]);
-ylim([min(g_pts)-0.5,max(g_pts)+0.5]);
+%xlim([-5,5]);
+%ylim([min(g_pts)-0.5,max(g_pts)+0.5]);
 
