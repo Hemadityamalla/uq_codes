@@ -17,14 +17,14 @@ g = @(xi) exp(-0.5*abs(xi - 0.5)); %continuous
 
 
 %Gauss-Hermite quadrature points (Q-points)
-Q = 20;
+Q = 50;
 [xi,w] = gaussQuad(Q,'Hermite');
-g_pts = sin(xi)%g(xi); %Integrates polynomials exactly, but not the Genz functions!
+g_pts = g(xi); %Integrates polynomials exactly, but not the Genz functions!
 
 ip = (xi(1):0.01:xi(end))'; %Interpolating points
 
 %Number of terms in the polynomial approximation
-N = 5;
+N = 25;
 g_hat = zeros(N,1);
 g_approx = 0;
 for i=1:N+1
@@ -35,6 +35,6 @@ end
 plot(xi,g_pts,'b.-');
 hold on;
 plot(ip, g_approx,'r');
-%xlim([-5,5]);
-%ylim([min(g_pts)-0.5,max(g_pts)+0.5]);
+xlim([-5,5]);
+ylim([min(g_pts)-0.5,max(g_pts)+0.5]);
 

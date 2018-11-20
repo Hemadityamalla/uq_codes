@@ -3,7 +3,7 @@ function [xi,w] = gaussQuad(n, type)
 %Based on the paper of Golub and Welsch
 %Generates 'n' quadrature points and the corresponding weights as two
 %separate column vectors
-% type = 1 corresponds to Hermite(probabilist) polynomials
+% type = 'Hermite' corresponds to Hermite(probabilist) polynomials- default
 
 if nargin == 1
     type = 'Hermite';
@@ -14,9 +14,15 @@ if strcmp(type,'Hermite')
     beta = sqrt([1:n-1])';
     L = spdiags(beta, -1, n, n);
     J = L + L' + spdiags(alpha, 0, n, n);
-    [V,D] = eig(full(J));
+elseif strcmp(type,'Chebyshev')
+    alpha = zeros(n,1);
+    beta = 0.5*ones(n-1,1);
+    L = spdiags(beta, -1, n, n);
+    J = L + L' + spdiags(alpha, 0, n, n);
 end
 
+
+[V,D] = eig(full(J));
 xi = diag(D); %Converting the diagonal matrix into a column vector
 w = V(1,:)'.^2; %Taking the first component from each eigenvector and squaring it.
 
