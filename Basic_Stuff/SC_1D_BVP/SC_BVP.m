@@ -8,7 +8,7 @@ c0 = 1.0 ;
 sigma = 1 ;
 
 %Gauss-Hermite quadrature points (Q points)
-Q = 20;
+Q = 70;
 [xi,w] = gaussQuad(Q,'Hermite');
 
 %Deterministic solver
@@ -28,11 +28,12 @@ end
 
 %Evaluating the coefficients and assembling the final function
 ip = (xi(1):0.01:xi(end))'; %Evaluation points
-N = 12; %Number of terms in the polynomial approximation
-T_hat = zeros(N,1); %Expansion coefficients array
+N = 3; %Number of terms in the polynomial approximation
+T_hat = zeros(N+1,1); %Expansion coefficients array
 T_approx = 0; %Final approximated function variable
 for i=1:N+1
-    T_hat(i,1) = sum(w.*hermite(xi,i-1).*T_half)/(factorial(i-1));
+    polynomial = hermite(xi, i-1);
+    T_hat(i,1) = sum(w.*polynomial.*T_half)/(sum(w.*polynomial.*polynomial));
     T_approx = T_approx + T_hat(i,1)*hermite(ip,i-1);
 end
 
