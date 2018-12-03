@@ -8,7 +8,7 @@ c0 = 1.0 ;
 sigma = 1 ;
 
 %Gauss-Hermite quadrature points (Q points)
-Q = 70;
+Q = 6;
 [xi,w] = gaussQuad(Q,'Hermite');
 
 %Deterministic solver
@@ -27,8 +27,8 @@ for i=[1:1:Q]
 end
 
 %Evaluating the coefficients and assembling the final function
-ip = (xi(1):0.01:xi(end))'; %Evaluation points
-N = 3; %Number of terms in the polynomial approximation
+ip = xi;%(xi(1):0.01:xi(end))'; %Evaluation points
+N = 5; %Number of terms in the polynomial approximation
 T_hat = zeros(N+1,1); %Expansion coefficients array
 T_approx = 0; %Final approximated function variable
 for i=1:N+1
@@ -37,7 +37,9 @@ for i=1:N+1
     T_approx = T_approx + T_hat(i,1)*hermite(ip,i-1);
 end
 
-T_mean = 0.496990562565105; %Computed using 1 million MC samples.
-plot(xi,T_half,'.-','Linewidth',1,'MarkerSize',8);
+T_mean = 0.497159169844595; %Computed using 1 million MC samples.
+plot(xi,T_half,'b.','Linewidth',1,'MarkerSize',8);
 hold on;
-plot(ip, T_approx,'r','LineWidth',1);
+plot(ip, T_approx,'LineWidth',1);
+xlim([min(xi)-0.05,max(xi)+0.05]);
+ylim([min(T_half)-0.5,max(T_half)+0.5]);
