@@ -8,8 +8,8 @@ c0 = 1.0 ;
 sigma = 1 ;
 
 %Gauss-Hermite quadrature points (Q points)
-Q = 6;
-[xi,w] = gaussQuad(Q,'Hermite');
+Q = 16;
+[xi,w] = gaussQuad(Q,'Legendre');
 
 %Deterministic solver
 
@@ -28,15 +28,18 @@ end
 
 %Evaluating the coefficients and assembling the final function
 ip = xi;%(xi(1):0.01:xi(end))'; %Evaluation points
-N = 5; %Number of terms in the polynomial approximation
+error = [];
+N = 2;
+%for N = [1,4,9,19,24] %Number of terms in the polynomial approximation
 T_hat = zeros(N+1,1); %Expansion coefficients array
 T_approx = 0; %Final approximated function variable
 for i=1:N+1
-    polynomial = hermite(xi, i-1);
+    polynomial = legendre(xi, i-1);
     T_hat(i,1) = sum(w.*polynomial.*T_half)/(sum(w.*polynomial.*polynomial));
-    T_approx = T_approx + T_hat(i,1)*hermite(ip,i-1);
+    T_approx = T_approx + T_hat(i,1)*legendre(ip,i-1);
 end
-
+%error = [error;sqrt(sum(w.*(T_half - T_approx).^2))];
+%end
 T_mean = 0.497159169844595; %Computed using 1 million MC samples.
 plot(xi,T_half,'b.','Linewidth',1,'MarkerSize',8);
 hold on;

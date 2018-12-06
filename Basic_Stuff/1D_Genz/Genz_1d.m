@@ -5,9 +5,9 @@ clear;clc;
 g = @(xi) exp(-0.5*abs(xi)); %continuous 
 %g = @(xi) 1.0./(0.5^(-2) + (xi).^2); %Product Peak 
 %g = @(xi) (1 + 5*xi).^(-2); %Corner peak 
-%g = @(xi) (xi > 0)*0 + (xi <= 0).*exp(0.5*xi); %Discontinuous
+g = @(xi) (xi > 0)*0 + (xi <= 0).*exp(0.5*xi); %Discontinuous
 %g = @(xi) exp(-(0.5^2)*(xi).^2); %Gaussian peak
-%g = @(xi) cos(2*pi*0.5 + 5*xi); %Oscillatory
+g = @(xi) cos(2*pi*0.5 + 0.5*xi); %Oscillatory
 
 % %Some special G-function
 %a = (1 - 2)/2.0;
@@ -50,5 +50,5 @@ plot(ip, g_approx,'r','LineWidth',2);
 xlim([min(xi)-0.05,max(xi)+0.05]);
 ylim([min(g_pts)-0.5,max(g_pts)+0.5]);
 figure(2)
-semilogy([1,4,9,19,24], error, '-o');
-
+semilogy([1,4,9,19,24], error, '-o','LineWidth',2,'MarkerSize',8);
+xlabel('N');ylabel('||g(\xi) - g_N(\xi)||_{L_2}')
