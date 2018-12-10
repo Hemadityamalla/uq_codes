@@ -1,4 +1,4 @@
-function C = setprod(varargin)
+function C = setprod(pts,d)
 % SETPROD product of multiple sets.
 %
 %   X = SETPROD(A,B,C,...) returns the cartesian product of the sets 
@@ -24,7 +24,10 @@ function C = setprod(varargin)
 % Mukhtar Ullah
 % mukhtar.ullah@informatic.uni-rostock.de
 % September 20, 2004
-args = varargin;
+args = {};
+for iter=1:d
+    args{iter} = pts;
+end
 if any([cellfun('isclass',args,'cell') cellfun('isclass',args,'struct')])
     error(' SETPROD only supports numeric/character arrays ')
 end
@@ -34,3 +37,5 @@ for i=n:-1:1
     G(:,i) = F{i}(:);
 end
 C = unique(G , 'rows');
+
+end
