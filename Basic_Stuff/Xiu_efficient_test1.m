@@ -1,9 +1,9 @@
 clear;
 clc;
 
-f = @(x) x(:,1).*x(:,2);%x(:,1).*exp(x(:,2))./(1 + x(:,3).^2);
+f = @(x) x(:,1).*exp(x(:,2))./(1 + x(:,3).^2);
 
-d = 2; %dimension of the random vector
+d = 3; %dimension of the random vector
 
 %Gauss-Hermite quadrature points (Q = q^d points)
 q = 2;
@@ -31,12 +31,14 @@ for i_P = 1:P
     fapprox = fapprox + fhat(i_P,1)*hermite(eval_pts, lexOrdering(i_P,:)');
 end
 
-%plotting(works only for d=2)
-[x,y] = meshgrid(xi,xi);
-fn = reshape(f(eval_pts),q,q);
-fn_approx = reshape(fapprox,q,q);
-surf(x,y,fn,'FaceColor',[1,0,0]);
-hold on;
-surf(x,y,fn_approx,'FaceColor',[0,1,0]);
-lim = 2;
-xlim([-lim,lim]);ylim([-lim,lim]);
+%plotting, works only for d=2
+if d == 2
+    [x,y] = meshgrid(xi,xi);
+    fn = reshape(f(eval_pts),q,q);
+    fn_approx = reshape(fapprox,q,q);
+    surf(x,y,fn,'FaceColor',[1,0,0]);
+    hold on;
+    surf(x,y,fn_approx,'FaceColor',[0,1,0]);
+    lim = 2;
+    xlim([-lim,lim]);ylim([-lim,lim]);
+end
