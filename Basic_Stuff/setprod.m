@@ -36,6 +36,8 @@ n = nargin;
 for i=n:-1:1
     G(:,i) = F{i}(:);
 end
-C = unique(G , 'rows');
+C = G;
+%C = unique(G , 'rows'); This neglects the same points, but they are needed
+%in our case
 
 end
