@@ -1,13 +1,13 @@
 clear;
 clc;
 
-f = @(x) ones(length(x(:,1)),1);%x(:,1);%x(:,1).*exp(x(:,2))./(1 + x(:,3).^2);
+f = @(x) x(:,1).*x(:,2);%x(:,1).*exp(x(:,2))./(1 + x(:,3).^2);
 
 d = 2; %dimension of the random vector
 
 %Gauss-Hermite quadrature points (Q = q^d points)
-q = 4;
-[xi,w] = gaussQuad(q,'Legendre');
+q = 2;
+[xi,w] = gaussQuad(q,'Hermite');
 %Change the setprod in such a way that you supply a single array and 'd'-
 %DONE
 %the unique command in setprod filters out some necessary combinations if
@@ -17,7 +17,7 @@ eval_pts = setprod(xi,d);
 weights = setprod(w,d);
 
 
-N = 1; %maximum degree of the multivariate polynomial
+N = 2; %maximum degree of the multivariate polynomial
 lexOrdering = monomialDegrees(d,N);
 %Pre-computing the normalization factors
 gamma = factorial(0:N);
@@ -26,11 +26,9 @@ gamma = factorial(0:N);
 P = length(lexOrdering);
 fhat = zeros(P,1);
 fapprox = 0;
-%The problem is going wrong due to the sum of prod(weights,2) not adding up
-%to 1
 for i_P = 1:P
-    fhat(i_P,1) = (sum(legendre(eval_pts,lexOrdering(i_P,:)').*f(eval_pts).*prod(weights,2)))/prod(gamma(lexOrdering(i_P,:)+1));
-    fapprox = fapprox + fhat(i_P,1)*legendre(eval_pts, lexOrdering(i_P,:)');
+    fhat(i_P,1) = (sum(hermite(eval_pts,lexOrdering(i_P,:)').*f(eval_pts).*prod(weights,2)))/prod(gamma(lexOrdering(i_P,:)+1));
+    fapprox = fapprox + fhat(i_P,1)*hermite(eval_pts, lexOrdering(i_P,:)');
 end
 
 %plotting(works only for d=2)
