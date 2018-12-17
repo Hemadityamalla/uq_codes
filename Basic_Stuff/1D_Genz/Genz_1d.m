@@ -1,4 +1,4 @@
-clear;clc;
+clear;clc;close all; format long;
 
 %Defining the 1D Genz functions
 
@@ -6,7 +6,7 @@ g = @(xi) exp(-0.5*abs(xi)); %continuous
 %g = @(xi) 1.0./(0.5^(-2) + (xi).^2); %Product Peak 
 %g = @(xi) (1 + 0.05*xi).^(-2); %Corner peak 
 %g = @(xi) (xi > 0)*0 + (xi <= 0).*exp(0.5*xi); %Discontinuous
-%g = @(xi) exp(-(0.5^2)*(xi).^2); %Gaussian peak
+g = @(xi) exp(-(0.5^2)*(xi).^2); %Gaussian peak
 %g = @(xi) cos(2*pi*0.5 + 0.5*xi); %Oscillatory
 
 % %Some special G-function
@@ -31,8 +31,8 @@ Q_mse = 500;
 
 
 %Number of terms in the polynomial approximation
-order = [1,4,9,14,19,24,29];
-%order = 1:20;
+%order = [1,4,9,14,19,24,29];
+order = 1:29;
 %dlmwrite('coeff.dat',order);
 N_iter = 1;
 for N = order
