@@ -1,22 +1,22 @@
 clear;clc;format long;
 
-f = @(x) x(:,1).*x(:,2).^2;%cos(2*pi + 5.0*(x(:,1) + x(:,2)));%x(:,1).*exp(x(:,2))./(1 + x(:,3).^2);
-d = 2; %dimension of the random vector
-%% Input for type of orthogonal polynomial basis. Alternatively, use 'Hermite'
+f = @(x) x(:,1).*exp(x(:,2))./(1 + x(:,3).^2);
+d = 3; %dimension of the random vector
+% Input for type of orthogonal polynomial basis. Alternatively, use 'Hermite'
 polyBasis = 'Legendre';
 
-q = 50;
+q = 10;
 [xi,w] = gaussQuad(q,polyBasis);
 eval_pts = setprod(xi,d); %(q^d points)
 weights = setprod(w,d);
 
 %Quadrature rule for the mean square error(Q^d points)
-Q = 70;
+Q = 25;
 [xi_mse,w_mse] = gaussQuad(Q,polyBasis);
 eval_pts_mse = setprod(xi_mse,d);
 weights_mse = setprod(w_mse,d);
 
-order = [0,1,2,3,4,5,6,7,8]; %maximum degree of the multivariate polynomial
+order = [0,1,2,3,4,5]; %maximum degree of the multivariate polynomial
 MSE = []; %Empty array to store the mean-squared error
 for N = order
      
@@ -37,7 +37,7 @@ for N = order
     %Computing the mean squared error
     MSE = [MSE;sqrt(sum((fapprox - f(eval_pts_mse)).^2.*prod(weights_mse,2)))];
 end
-%% This part is just for visualization, works only for d=2
+% This part is just for visualization, works only for d=2
 % if d == 2
 %     [x,y] = meshgrid(xi,xi);
 %     fn = reshape(f(eval_pts),q,q);
