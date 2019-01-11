@@ -1,4 +1,6 @@
-clear; clc;
+clear;clc;close all; format long;
+set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
+
 N = 10;
 dx = 1.0/N;
 x = [0:dx:1]';
@@ -6,12 +8,12 @@ xmid = ( x(1:end-1) + x (2:end) ) / 2.0 ;
 T_left = 1;
 c0 = 1.0 ;
 % % Define phi
-d = 1; sigma = 1 ;
+d = 10; sigma = 1 ;
 
 
 mc_mean = [];
 
-n = [1:5:1e4];
+n = [1:50:1e4];
 for sim = n
     for jj=[1:1:sim]
         xi = randn(d,1);
@@ -27,22 +29,28 @@ for sim = n
         b = zeros(N-1,1) ;
         b(1) = -(cmid(1)/(dx^2))*T_left;
         u = A\b;
+        
+%         if ~mod(jj,1e3)
+%             plot(x,[1;u;0]);
+%             hold on;
+%         end
         T_half(jj,1) = u(N/2);
+            
     end
-    mc_mean = [mc_mean mean(T_half)];
+    mc_mean = [mc_mean, mean(T_half)];
 end
 
 figure(2)
-plot(mc_mean,'b.-','LineWidth',1);
+plot(mc_mean,'b.-');
 hold on;
 mean_temp = 0.5;
-plot(mean_temp*ones(length(mc_mean),1),'r','LineWidth',2);
+plot(mean_temp*ones(length(mc_mean),1),'r');
 figure(3)
 error = abs(mc_mean - mean_temp);
 loglog(n,error,'ro-')
 hold on;
 coeffs = polyfit(log(n),log(error),1);
 y = polyval(coeffs,log(n));
-loglog(n,exp(y),'b','LineWidth',2);
-xlabel('n'); ylabel('|estimated_{\mu_y} - exact_{\mu_y}|');
-legend('|estimated_{\mu_y} - exact_{\mu_y}|',strcat('line with slope',num2str(coeffs(1))));
+loglog(n,exp(y),'b');
+xlabel('n'); ylabel('Absolute error');
+legend('Absolute error ',strcat('line with slope',num2str(coeffs(1))));

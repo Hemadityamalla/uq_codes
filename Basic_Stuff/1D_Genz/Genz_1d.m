@@ -1,13 +1,13 @@
 clear;clc;close all; format long;
-
+set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
 %Defining the 1D Genz functions
 
 g = @(xi) exp(-0.5*abs(xi)); %continuous 
 %g = @(xi) 1.0./(0.5^(-2) + (xi).^2); %Product Peak 
 %g = @(xi) (1 + 0.05*xi).^(-2); %Corner peak 
-%g = @(xi) (xi > 0)*0 + (xi <= 0).*exp(0.5*xi); %Discontinuous
-g = @(xi) exp(-(0.5^2)*(xi).^2); %Gaussian peak
-%g = @(xi) cos(2*pi*0.5 + 0.5*xi); %Oscillatory
+g = @(xi) (xi > 0)*0 + (xi <= 0).*exp(0.5*xi); %Discontinuous
+%g = @(xi) exp(-(0.5^2)*(xi).^2); %Gaussian peak
+g = @(xi) cos(2*pi*0.5 + 0.5*xi); %Oscillatory
 
 % %Some special G-function
 %a = (1 - 2)/2.0;
@@ -18,9 +18,9 @@ g = @(xi) exp(-(0.5^2)*(xi).^2); %Gaussian peak
 
 error = [];
 error_mean = [];
-polyBasis = 'Hermite';
+polyBasis = 'Legendre';
 %Gauss-Hermite/Legendre quadrature points (Q-points)
-Q = 500;
+Q = 100;
 [xi,w] = gaussQuad(Q,polyBasis);
 g_pts = g(xi);
 
@@ -37,14 +37,15 @@ order = 1:29;
 N_iter = 1;
 for N = order
     
-    gamma = factorial(0:N);
+    %gamma = factorial(0:N); %for hermite basis
+    gamma = 2.0./(2*(0:N) + 1.0); %Legendre basis
     g_hat = zeros(round(N),1); 
     g_approx = 0;
     for i=1:N+1
-        polynomial = hermite(xi, i-1);
-        g_hat(i,N_iter) = sum(w.*polynomial.*g_pts)/(sum(w.*polynomial.*polynomial));
-        %g_hat(i,1) = sum(w.*polynomial.*g_pts)/(gamma(i));
-        g_approx = g_approx + g_hat(i,N_iter)*hermite(xi_mse,i-1);
+        polynomial = legendre(xi, i-1);
+        %g_hat(i,N_iter) = sum(w.*polynomial.*g_pts)/(sum(w.*polynomial.*polynomial));
+        g_hat(i,1) = sum(w.*polynomial.*g_pts)/(gamma(i));
+        g_approx = g_approx + g_hat(i,N_iter)*legendre(xi_mse,i-1);
     end
     %dlmwrite('coeff.dat',g_hat','-append');
     
@@ -57,16 +58,15 @@ plot(xi_mse, g_approx,'LineWidth',2);
 xlim([min(xi)-0.05,max(xi)+0.05]);
 end
 
-plot(xi,g_pts,'bo-','LineWidth',2);
+plot(xi,g_pts,'bo-');
 hold on;
-plot(xi_mse, g_approx,'r','LineWidth',2);
+plot(xi_mse, g_approx,'r');
 xlim([min(xi)-0.05,max(xi)+0.05]);
 ylim([min(g_pts)-0.5,max(g_pts)+0.5]);
 figure(2)
-loglog(order, error, '-o','LineWidth',2,'MarkerSize',8);
+loglog(order, error, '-o');
+grid on
 hold on;
 %p = polyfit(log(order),log(error)',1);
-%loglog(order,order.^(-0.5*p(1)),'r','LineWidth',2);
-xlabel('N');ylabel('||g(\xi) - g_N(\xi)||_{L_2}')
-figure(3)
-loglog(order,error_mean,'-o','Linewidth',2,'MarkerSize',8);
+%loglog(order,order.^(-0.5*p(1)),'r');
+xlabel('N (Number of gPC expansion terms)');ylabel('Mean-square Error');
