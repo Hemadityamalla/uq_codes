@@ -1,6 +1,6 @@
 clear;clc;
 
-d = 2; N = 6;
+d = 7; N = 8;
 polyBasis = 'Legendre';
 %Obtaining the combinations of multi-indices
 temp = monomialDegrees(d,N);
@@ -40,10 +40,35 @@ temp = monomialDegrees(d,N);
      snodes = [snodes,tempNodes];
      sweights = [sweights,w];
  end
- 
+
+%  %Combining repeated entries
+%  snodes = snodes';
+%  sweights = sweights';
+%  %1) Homogenizing the zero entries
+%  snodes(abs(snodes) < 1e-16) = 0;
+%  %2) Obtaining index list of non-unique nodes
+%  [C,ia,ic] = unique(snodes,'rows','stable');
+%  %3) Obtaining non-unique indices
+%  temp = repmat(ic,[1,length(ic)]);
+%  temp2 = tril(temp==temp',-1);
+%  [~,~,non_uq_idx] = find(temp(temp2));
+%  %4) Deleting the non-unique nodes and clubbing the weights
+%  non_uq_idx = unique(non_uq_idx,'stable');
+%  rep_cache = [];
+%  for ii=1:length(non_uq_idx)
+%     reps = find(ic == non_uq_idx(ii));
+%     rep_cache = [rep_cache;reps];
+%     sweights(reps(1)) = sweights(reps(1)) + sum(sweights(reps(2:end)));
+%  end
+%  sweights(rep_cache) = [];
+%  snodes(rep_cache,:) = [];
+%  %5)New nodal set and weights
+%  snodes = snodes';
+%  sweights = sweights';
+
  % This part is just for visualization, works only for d=2
 if d == 2
-    scatter(snodes(1,:),snodes(2,:),'+');
+    scatter(snodes(1,:),snodes(2,:),'.');
     lim = 1;
     xlim([-lim,lim]);ylim([-lim,lim]);zlim([-lim,lim])
 end
