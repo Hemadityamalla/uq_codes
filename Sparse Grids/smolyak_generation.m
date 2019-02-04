@@ -1,6 +1,7 @@
-clear;clc;
+clear;clc; close all;
 
-d = 7; N = 8;
+d = 10; k = 3; %Level of the smolyak quadrature
+N = d+k;%Note: N = d + k, where k is the order of exactness
 polyBasis = 'Legendre';
 %Obtaining the combinations of multi-indices
 temp = monomialDegrees(d,N);
@@ -41,30 +42,47 @@ temp = monomialDegrees(d,N);
      sweights = [sweights,w];
  end
 
-%  %Combining repeated entries
-%  snodes = snodes';
-%  sweights = sweights';
-%  %1) Homogenizing the zero entries
-%  snodes(abs(snodes) < 1e-16) = 0;
-%  %2) Obtaining index list of non-unique nodes
-%  [C,ia,ic] = unique(snodes,'rows','stable');
-%  %3) Obtaining non-unique indices
-%  temp = repmat(ic,[1,length(ic)]);
-%  temp2 = tril(temp==temp',-1);
-%  [~,~,non_uq_idx] = find(temp(temp2));
-%  %4) Deleting the non-unique nodes and clubbing the weights
-%  non_uq_idx = unique(non_uq_idx,'stable');
-%  rep_cache = [];
-%  for ii=1:length(non_uq_idx)
-%     reps = find(ic == non_uq_idx(ii));
-%     rep_cache = [rep_cache;reps];
-%     sweights(reps(1)) = sweights(reps(1)) + sum(sweights(reps(2:end)));
-%  end
-%  sweights(rep_cache) = [];
-%  snodes(rep_cache,:) = [];
-%  %5)New nodal set and weights
-%  snodes = snodes';
-%  sweights = sweights';
+ %Combining repeated entries
+ snodes = snodes';
+ sweights = sweights';
+ %1) Homogenizing the zero entries
+ snodes(abs(snodes) < 1e-16) = 0;
+ %2) Obtaining index list of non-unique nodes
+ [C,ia,ic] = unique(snodes,'rows','stable');
+ %3) Obtaining non-unique indices(NOT MEMORY EFFICIENT)
+ temp = repmat(ic,[1,length(ic)]);
+ temp2 = tril(temp==temp',-1);
+ [~,~,non_uq_idx] = find(temp(temp2));
+ %4) Deleting the non-unique nodes and clubbing the weights
+ non_uq_idx = unique(non_uq_idx,'stable');
+ rep_cache = [];
+ for ii=1:length(non_uq_idx)
+    reps = find(ic == non_uq_idx(ii));
+    rep_cache = [rep_cache;reps];
+    sweights(reps(1)) = sweights(reps(1)) + sum(sweights(reps(2:end)));
+ end
+ sweights(rep_cache) = [];
+ snodes(rep_cache,:) = [];
+ %5)New nodal set and weights
+ snodes = snodes';
+ sweights = sweights';
+
+
+
+%Expt before exams----------------
+%  %Taking care of the repeated nodes (0,0,0...0) due to finite precision
+%  %arithmetic
+%  snodes = snodes'; sweights = sweights';
+%  snodes(abs(snodes) < 1e-15) = 0;
+%  [finalquad, ic, ia] = unique(snodes,'rows','stable');
+%  ioi = find(ia==find(accumarray(ia,1)>1));
+%  sweights(ioi(1)) = sweights(ioi(1)) + sum(sweights(ioi(2:end)));%Adding the weights of the similar entries
+%  sweights(ioi(2:end)) = []; %Deleting the individual weights
+%  
+%  %Now the final quadrature rule is (finalquad, sweights)
+%  %snodes = finalquad;
+ 
+
 
  % This part is just for visualization, works only for d=2
 if d == 2
