@@ -1,8 +1,9 @@
-clear;clc; close all;
+function [x,w] = smolyakSparseGrid(d,k,growth,quadrature)
 
-d = 2; k = 4; %Level of the smolyak quadrature
+
+
 N = d+k;%Note: N = d + k, where k is the order of exactness
-polyBasis = 'Legendre';
+
 %Obtaining the combinations of multi-indices
 temp = monomialDegrees(d,N);
     %Filtering out the combinations with zero degrees
@@ -21,8 +22,7 @@ temp = monomialDegrees(d,N);
      quadRule(size(alpha,2)).nodes = zeros(1,1);
      quadRule(size(alpha,2)).weights = zeros(1,1);
      %Generating quadrature rules for each combination(how can this be vectorized?)
-     %[xi,w] = gaussQuad(2^(alpha(aidx,1)-1)+1,polyBasis);
-     [xi,w] = clencurt(2^(alpha(aidx,1)-1));
+     [xi,w] = quadgen(growth(alpha(aidx,1)),quadrature);
      quadRule(1).nodes = xi';
      quadRule(1).weights = w';
      %The below initialization is inefficient as the variables are
@@ -30,8 +30,7 @@ temp = monomialDegrees(d,N);
      tempNodes = quadRule(1).nodes;
      tempWeights = quadRule(1).weights;
      for ii=2:size(alpha,2)
-         %[xi,w] = gaussQuad(2^(alpha(aidx,ii)-1)+1,polyBasis);
-         [xi,w] = clencurt(2^(alpha(aidx,ii)-1));
+         [xi,w] = quadgen(growth(alpha(aidx,ii)),quadrature);
          quadRule(ii).nodes = xi';
          quadRule(ii).weights = w';
          tempNodes = combvec(tempNodes, quadRule(ii).nodes);
@@ -44,29 +43,7 @@ temp = monomialDegrees(d,N);
      snodes = [snodes,tempNodes];
      sweights = [sweights,w];
  end
+%Merging the duplicates
+[x, w] = combine_reps(snodes, sweights);
 
-[snodes, sweights] = combine_reps(snodes, sweights);
-
-
-
-%Expt before exams----------------
-%  %Taking care of the repeated nodes (0,0,0...0) due to finite precision
-%  %arithmetic
-%  snodes = snodes'; sweights = sweights';
-%  snodes(abs(snodes) < 1e-15) = 0;
-%  [finalquad, ic, ia] = unique(snodes,'rows','stable');
-%  ioi = find(ia==find(accumarray(ia,1)>1));
-%  sweights(ioi(1)) = sweights(ioi(1)) + sum(sweights(ioi(2:end)));%Adding the weights of the similar entries
-%  sweights(ioi(2:end)) = []; %Deleting the individual weights
-%  
-%  %Now the final quadrature rule is (finalquad, sweights)
-%  %snodes = finalquad;
- 
-
-
- % This part is just for visualization, works only for d=2
-if d == 2
-    scatter(snodes(1,:),snodes(2,:),'.');
-    lim = 1;
-    xlim([-lim,lim]);ylim([-lim,lim]);zlim([-lim,lim])
 end
