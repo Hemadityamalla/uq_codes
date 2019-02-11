@@ -3,8 +3,8 @@ set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWi
 
 f = @(x) exp(sum(abs(x),1));%x(:,1).*exp(x(:,2))./(1 + x(:,3).^2);
 %f = @(x) cos(2*pi*0.5 + 0.5*(x(:,1) + x(:,2)));
-%f = @(x) (x(:,1) > 0)*0 .* (x(:,2) > 0)*0 + (x(:,1) <= 0).*exp(0.5*(x(:,1) + x(:,2))).*(x(:,2) <= 0);
-d = 2; %dimension of the random vector
+f = @(x) (x(:,1) > 0)*0 .* (x(:,2) > 0)*0 + (x(:,1) <= 0).*exp(1*(x(:,1) + x(:,2))).*(x(:,2) <= 0);
+d = 1; %dimension of the random vector
 % Input for type of orthogonal polynomial basis. Alternatively, use 'Hermite'
 polyBasis = 'Legendre';
 
