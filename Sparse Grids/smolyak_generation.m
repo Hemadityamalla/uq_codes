@@ -1,6 +1,6 @@
 clear;clc; close all;
 
-d = 2; k = 4; %Level of the smolyak quadrature
+d = 5; k = 8; %Level of the smolyak quadrature
 N = d+k;%Note: N = d + k, where k is the order of exactness
 polyBasis = 'Legendre';
 %Obtaining the combinations of multi-indices
