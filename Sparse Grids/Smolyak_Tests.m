@@ -9,13 +9,13 @@ d = 5; %dimension of the random vector
 polyBasis = 'Legendre';
 quadrature = 'ClenshawCurtis';
 growth = @(x) 2^(x-1);
-exact = ((exp(0.5) - 1)/0.5)^d;%cos(2*pi*0.3 + 0.25*d)*(sin(0.25)/0.5)^d;%(exp(1) - 1)^d;
+exact = ((exp(0.5) - 1)/0.5)^d/(2^d);%((exp(0.5) - 1)/0.5)^d;%cos(2*pi*0.3 + 0.25*d)*(sin(0.25)/0.5)^d;%(exp(1) - 1)^d/(2^d);
 error = [];
 numpts = [];
 for k=[2,3,4,5,6,7,8]
 
 [eval_pts,weights] = smolyakSparseGrid(d,k,growth, quadrature);
-%Rescaling to the domain [0,1]---- not sure why I am dividing by 2^d.
+%Rescaling to the domain [0,1]---- not sure why I am dividing by 2^d- figure it out dumbass!.
 eval_pts = 0.5*(eval_pts+1);
 weights = weights/2^d;
 %Quadrature rule for the mean square error(Q^d points)
@@ -39,7 +39,7 @@ N = 0; %maximum degree of the multivariate polynomial
         fhat(i_P,1) = (sum(legendre(eval_pts',lexOrdering(i_P,:)').*f(eval_pts').*prod(weights',2)))/prod(gamma(lexOrdering(i_P,:)+1))
         %fapprox = fapprox + fhat(i_P,1)*legendre(eval_pts_mse', lexOrdering(i_P,:)');
     end
-    error = [error;abs(fhat(1,1) - exact/2^d)];
+    error = [error;abs(fhat(1,1) - exact)];
     numpts = [numpts;length(weights)];
     %Computing the mean squared error
     %MSE = [MSE;sqrt(sum((fapprox - f(eval_pts_mse')).^2.*prod(weights_mse',2)))];
