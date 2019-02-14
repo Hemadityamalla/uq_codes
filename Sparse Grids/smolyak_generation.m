@@ -1,6 +1,7 @@
 clear;clc; close all;
+set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',16);
 
-d = 5; k = 8; %Level of the smolyak quadrature
+d = 2; k = 8; %Level of the smolyak quadrature
 N = d+k;%Note: N = d + k, where k is the order of exactness
 polyBasis = 'Legendre';
 %Obtaining the combinations of multi-indices
@@ -21,7 +22,7 @@ temp = monomialDegrees(d,N);
      quadRule(size(alpha,2)).nodes = zeros(1,1);
      quadRule(size(alpha,2)).weights = zeros(1,1);
      %Generating quadrature rules for each combination(how can this be vectorized?)
-     %[xi,w] = gaussQuad(2^(alpha(aidx,1)-1)+1,polyBasis);
+     %[xi,w] = gaussQuad((alpha(aidx,1))+1,polyBasis);
      [xi,w] = clencurt(2^(alpha(aidx,1)-1));
      quadRule(1).nodes = xi';
      quadRule(1).weights = w';
@@ -30,7 +31,7 @@ temp = monomialDegrees(d,N);
      tempNodes = quadRule(1).nodes;
      tempWeights = quadRule(1).weights;
      for ii=2:size(alpha,2)
-         %[xi,w] = gaussQuad(2^(alpha(aidx,ii)-1)+1,polyBasis);
+         %[xi,w] = gaussQuad((alpha(aidx,ii))+1,polyBasis);
          [xi,w] = clencurt(2^(alpha(aidx,ii)-1));
          quadRule(ii).nodes = xi';
          quadRule(ii).weights = w';
@@ -61,7 +62,7 @@ temp = monomialDegrees(d,N);
 %  
 %  %Now the final quadrature rule is (finalquad, sweights)
 %  %snodes = finalquad;
- 
+ length(snodes)
 
 
  % This part is just for visualization, works only for d=2
