@@ -1,7 +1,7 @@
 clear;clc; close all;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',16);
 
-d = 2; k = 8; %Level of the smolyak quadrature
+d = 2; k = 6; %Level of the smolyak quadrature
 N = d+k;%Note: N = d + k, where k is the order of exactness
 polyBasis = 'Legendre';
 %Obtaining the combinations of multi-indices
