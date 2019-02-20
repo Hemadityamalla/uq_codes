@@ -42,8 +42,11 @@ temp = monomialDegrees(d,N);
      %Appending the nodes and the weights
      snodes = [snodes,tempNodes];
      sweights = [sweights,w];
+     %[snodes,sweights] = combine_reps(snodes, sweights);
  end
 %Merging the duplicates
+x = snodes;
+w = sweights;
 [x, w] = combine_reps(snodes, sweights);
 
 end

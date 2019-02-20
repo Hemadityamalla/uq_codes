@@ -1,18 +1,18 @@
 clear;clc;format long;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',16);
 
-f = @(x) exp(sum(abs(x),2));%x(:,1).*exp(x(:,2))./(1 + x(:,3).^2);
+f = @(x) exp(-0.5*sum(abs(x-0.5),2));%x(:,1).*exp(x(:,2))./(1 + x(:,3).^2);
 %f = @(x) cos(2*pi*0.5 + 0.5*(x(:,1) + x(:,2)));
 %f = @(x) (x(:,1) > 0)*0 .* (x(:,2) > 0)*0 + (x(:,1) <= 0).*exp(1*(x(:,1) + x(:,2))).*(x(:,2) <= 0);
 d = 2; %dimension of the random vector
 % Input for type of orthogonal polynomial basis. Alternatively, use 'Hermite'
 polyBasis = 'Legendre';
 
-q = (2^5)-1;
+q = (2^7)-1;
 [xi,w] = clencurt(q);
 %[xi,w] = gaussQuad(q,polyBasis);
-eval_pts = setprod(xi,d); %(q^d points)
-weights = setprod(w,d);
+eval_pts = 0.5*(1+setprod(xi,d)); %(q^d points)
+weights = prod(setprod(w,d),2)/2^d;
 
 %Quadrature rule for the mean square error(Q^d points)
 Q = 50;
@@ -35,9 +35,10 @@ for N = order
     fhat = zeros(P,1);
     fapprox = 0;
     for i_P = 1:P
-        fhat(i_P,1) = (sum(legendre(eval_pts,lexOrdering(i_P,:)').*f(eval_pts).*prod(weights,2)))/prod(gamma(lexOrdering(i_P,:)+1));
+        fhat(i_P,1) = (sum(legendre(eval_pts,lexOrdering(i_P,:)').*f(eval_pts).*weights))/prod(gamma(lexOrdering(i_P,:)+1));
         fapprox = fapprox + fhat(i_P,1)*legendre(eval_pts_mse, lexOrdering(i_P,:)');
     end
+    fhat(1,1)
     %Computing the mean squared error
     %MSE = [MSE;sqrt(sum((fapprox - f(eval_pts_mse)).^2.*prod(weights_mse,2)))];
 end
