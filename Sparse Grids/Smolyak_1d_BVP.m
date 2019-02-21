@@ -14,8 +14,8 @@ sigma = 1.0;
 polyBasis = 'Legendre';
 quadrature = 'ClenshawCurtis';
 growth = @(x) 2^(x-1);
-mu = [];
-var = [];
+%mu = [];
+%var = [];
 skew = [];
 kurt = [];
 numpts = [];
@@ -26,7 +26,7 @@ exact_kurtosis = 1.493438201045323;
 %[xi_mse,w_mse] = smolyakSparseGrid(d,7,growth, quadrature);
 xi_sample = -1+2*rand(d,2e6);
 for k=[2,3,4,5,6,7,8]
-
+    umean = 0;
     [xi,w] = smolyakSparseGrid(d,k,growth, quadrature);
     %Rescaling to the domain [0,1]---- not sure why I am dividing by 2^d- figure it out dumbass!.
     %xi = 0.5*(xi+1);
@@ -45,10 +45,14 @@ for k=[2,3,4,5,6,7,8]
         b(1) = -(a(1)/(dx^2))*u_left;
         u = A\b;
         u_mid(1,ii) = u(Npts/2);
+        umean = umean + [1;u;0];
         %plot(x,[1;u;0]);
         %hold on;
     end
-    degree = 4; %maximum degree of the multivariate polynomial---------experiment on this
+    umean = umean/length(xi);
+    plot(x,umean);
+    hold on;
+    degree = 3; %maximum degree of the multivariate polynomial---------experiment on this
     lexOrdering = monomialDegrees(d,degree);
     %Pre-computing the normalization factors
     gamma = 2.0./(2*(0:degree) + 1.0); %Legendre
@@ -57,21 +61,21 @@ for k=[2,3,4,5,6,7,8]
     fapprox = 0;
     for i_P = 1:P
         fhat(i_P,1) = (sum(legendre(xi',lexOrdering(i_P,:)').*u_mid'.*prod(w',2)))/prod(gamma(lexOrdering(i_P,:)+1));
-        fapprox = fapprox + fhat(i_P,1)*legendre(xi_sample', lexOrdering(i_P,:)');
+        %fapprox = fapprox + fhat(i_P,1)*legendre(xi_sample', lexOrdering(i_P,:)');
     end
     numpts = [numpts;length(w)];
-    w = ones(1,2e6)*5e-7;
-    ap_var = dotprod((fapprox' - fhat(1,1)).^2,w');
-    ap_skew = dotprod(((fapprox' - fhat(1,1))/sqrt(ap_var)).^3,w');
-    ap_kurt = dotprod(((fapprox' - fhat(1,1))/sqrt(ap_var)).^4,w');
-    fhat(1,1)
+    %w = ones(1,2e6)*5e-7;
+    %ap_var = dotprod((fapprox' - fhat(1,1)).^2,w');
+    %ap_skew = dotprod(((fapprox' - fhat(1,1))/sqrt(ap_var)).^3,w');
+    %ap_kurt = dotprod(((fapprox' - fhat(1,1))/sqrt(ap_var)).^4,w');
+    %fhat(1,1)
     %error_mean = [error_mean;abs(fhat(1,1) - exact_mean)];
     %error_var = [error_var;abs(var(fapprox) - exact_variance)];
     %error_skew = [error_skew;abs(skewness(fapprox,1) - exact_skewness)];
     %error_kurt = [error_kurt;abs(kurtosis(fapprox,1) - exact_kurtosis)];
-    mu = [mu;fhat(1,1)];
-    var = [var;ap_var];
-    skew =[skew;ap_skew];
-    kurt = [kurt;ap_kurt];
+    %mu = [mu;fhat(1,1)];
+    %var = [var;ap_var];
+    %skew =[skew;ap_skew];
+    %kurt = [kurt;ap_kurt];
     
 end

@@ -21,11 +21,17 @@ end
 
 %The code below can be vectorized-- future work
 polymat = zeros(Npts, d);
-for i_pts = 1:Npts
-    for i_d = 1:d
-       polymat(i_pts,i_d) = hermite(pts(i_pts,i_d),degree(i_d)); 
-    end
+%for i_pts = 1:Npts
+%    for i_d = 1:d
+%       polymat(i_pts,i_d) = hermite(pts(i_pts,i_d),degree(i_d)); 
+%    end
+%end
+
+for i_d = 1:d
+   polymat(:,i_d) = hermite(pts(:,i_d),degree(i_d)); 
 end
+
+
 
 herm = prod(polymat,2);
 
