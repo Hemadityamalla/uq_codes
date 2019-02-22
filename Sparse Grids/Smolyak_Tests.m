@@ -1,18 +1,18 @@
 clear;clc;format long;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
 
-f = @(x) exp(-0.5*sum(abs(x-0.5),2));
+%f = @(x) exp(-0.5*sum(abs(x-0.5),2));
 %f = @(x) cos(2*pi*0.3 + 0.5*(sum(x,2)));
-%f = @(x) (prod(x,2) <= 0)*0 + (prod(x,2) > 0).*exp(0.5*sum(x,2)); %Discontinuous
-d = 5; %dimension of the random vector
+f = @(x) (prod(x,2) <= 0)*0 + (prod(x,2) > 0).*exp(0.5*sum(x,2)); %Discontinuous
+d = 1; %dimension of the random vector
 % Input for type of orthogonal polynomial basis. Alternatively, use 'Hermite'
 polyBasis = 'Legendre';
 quadrature = 'ClenshawCurtis';
 growth = @(x) 2^(x-1);
-exact = 0.5*(((1.0 - exp(-0.25))/0.5)^d + ((1.0 - exp(-0.25))/0.5)^d);%0.5*(((1.0 - exp(-0.25))/0.5)^d + ((1.0 - exp(-0.25))/0.5)^d);%cos(2*pi*0.3 + 0.25*d)*(sin(0.25)/0.5)^d;%((exp(0.5) - 1))^d;
+exact = ((exp(0.5) - 1))^d;%0.5*(((1.0 - exp(-0.25))/0.5)^d + ((1.0 - exp(-0.25))/0.5)^d);%cos(2*pi*0.3 + 0.25*d)*(sin(0.25)/0.5)^d;%((exp(0.5) - 1))^d;
 error = [];
 numpts = [];
-for k=[1,2,3,4,5,6]
+for k=[1,2,3,4,5,6,7]
 
 [eval_pts,weights] = smolyakSparseGrid(d,k,growth, quadrature);
 %Rescaling to the domain [0,1].
@@ -45,4 +45,6 @@ N = 0; %maximum degree of the multivariate polynomial
     %Computing the mean squared error
     %MSE = [MSE;sqrt(sum((fapprox - f(eval_pts_mse')).^2.*prod(weights_mse',2)))];
 end
+
+csvwrite(strcat('Smolyak_d',num2str(d),'.dat'),[numpts,error]);
 
