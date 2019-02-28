@@ -8,7 +8,7 @@ xmid = ( x(1:end-1) + x (2:end) ) / 2.0 ;
 T_left = 1;
 c0 = 1.0 ;
 % % Define phi
-d = 10; sigma = 1 ;
+d = 2; sigma = 1 ;
 
 
 mc_mean = [];
@@ -39,18 +39,18 @@ for sim = n
     end
     mc_mean = [mc_mean, mean(T_half)];
 end
-
-figure(2)
-plot(mc_mean,'b.-');
-hold on;
-mean_temp = 0.5;
-plot(mean_temp*ones(length(mc_mean),1),'r');
-figure(3)
-error = abs(mc_mean - mean_temp);
-loglog(n,error,'ro-')
-hold on;
-coeffs = polyfit(log(n),log(error),1);
-y = polyval(coeffs,log(n));
-loglog(n,exp(y),'b');
-xlabel('n'); ylabel('Absolute error');
-legend('Absolute error ',strcat('line with slope',num2str(coeffs(1))));
+% 
+% figure(2)
+% plot(mc_mean,'b.-');
+% hold on;
+% mean_temp = 0.5;
+% plot(mean_temp*ones(length(mc_mean),1),'r');
+% figure(3)
+% error = abs(mc_mean - mean_temp);
+% loglog(n,error,'ro-')
+% hold on;
+% coeffs = polyfit(log(n),log(error),1);
+% y = polyval(coeffs,log(n));
+% loglog(n,exp(y),'b');
+% xlabel('n'); ylabel('Absolute error');
+% legend('Absolute error ',strcat('line with slope',num2str(coeffs(1))));
