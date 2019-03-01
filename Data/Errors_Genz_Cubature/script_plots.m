@@ -7,11 +7,11 @@ for ii=1:d
    Cinf.smolyak{ii} = csvread(strcat('./Cinf_fn/Smolyak_d',num2str(ii),'.dat'));
    Cinf.mc{ii} = reshape(csvread(strcat('./Cinf_fn/MC_d',num2str(ii),'.dat')),[d+1,2]);
    Cinf.tensor{ii} = csvread(strcat('./Cinf_fn/Tensor_d',num2str(ii),'.dat'));
-   loglog(Cinf.smolyak{ii}(:,1), Cinf.smolyak{ii}(:,2), 'r');
-   hold on;
-   loglog(Cinf.mc{ii}(:,1), Cinf.mc{ii}(:,2),'b');
-   hold on;
-   loglog(Cinf.tensor{ii}(:,1), Cinf.tensor{ii}(:,2),'g');
+%    loglog(Cinf.smolyak{ii}(:,1), Cinf.smolyak{ii}(:,2), 'r');
+%    hold on;
+%    loglog(Cinf.mc{ii}(:,1), Cinf.mc{ii}(:,2),'b');
+%    hold on;
+%    loglog(Cinf.tensor{ii}(:,1), Cinf.tensor{ii}(:,2),'g');
 end
 
 
@@ -28,3 +28,42 @@ for ii=1:d
    Disc.mc{ii} = reshape(csvread(strcat('./Disc_fn/MC_d',num2str(ii),'.dat')),[d+1,2]);
    Disc.tensor{ii} = csvread(strcat('./Disc_fn/Tensor_d',num2str(ii),'.dat'));
 end
+
+%Plot for comparing the convergence of different methods at d=5
+xpos = 500;ypos = 500; width = 1000; height = 800;
+figure(1)
+loglog(Cinf.smolyak{5}(:,1),Cinf.smolyak{ii}(:,2),'bo-','MarkerFaceColor','b');
+hold on;
+loglog(Cinf.mc{5}(:,1),Cinf.mc{5}(:,2),'b s:','MarkerFaceColor','b');
+hold on;
+loglog(Cinf.tensor{5}(:,1),Cinf.tensor{5}(:,2),'b ^--','MarkerFaceColor','b');
+xlabel('Number of Points'); ylabel('Absolute Error'); 
+legend('Smolyak','Tensor','Monte-Carlo');
+grid on;set(gcf,'Position',[xpos ypos width height]); box on;
+figure(2)
+loglog(C0.smolyak{5}(:,1),C0.smolyak{ii}(:,2),'go-','MarkerFaceColor','g');
+hold on;
+loglog(C0.mc{5}(:,1),C0.mc{5}(:,2),'g s:','MarkerFaceColor','g');
+hold on;
+loglog(C0.tensor{5}(:,1),C0.tensor{5}(:,2),'g ^--','MarkerFaceColor','g');
+xlabel('Number of Points'); ylabel('Absolute Error');
+legend('Smolyak','Tensor','Monte-Carlo');
+grid on;set(gcf,'Position',[xpos ypos width height]); box on;
+figure(3)
+loglog(Disc.smolyak{5}(:,1),Disc.smolyak{ii}(:,2),'ro-','MarkerFaceColor','r');
+hold on;
+loglog(Disc.mc{5}(:,1),Disc.mc{5}(:,2),'r s:','MarkerFaceColor','r');
+hold on;
+loglog(Disc.tensor{5}(:,1),Disc.tensor{5}(:,2),'r ^--','MarkerFaceColor','r');
+grid on;set(gcf,'Position',[xpos ypos width height]); box on;
+xlabel('Number of Points'); ylabel('Absolute Error');
+legend('Smolyak','Tensor','Monte-Carlo');
+figure(4)
+loglog(Cinf.smolyak{5}(:,1),Cinf.smolyak{ii}(:,2),'bo-','MarkerFaceColor','b');
+hold on;
+loglog(C0.smolyak{5}(:,1),C0.smolyak{ii}(:,2),'go-','MarkerFaceColor','g');
+hold on;
+loglog(Disc.smolyak{5}(:,1),Disc.smolyak{ii}(:,2),'ro-','MarkerFaceColor','r');
+grid on;set(gcf,'Position',[xpos ypos width height]); box on;
+xlabel('Number of Points'); ylabel('Absolute Error');
+legend('C_\infty','C_0','Piecewise C_0');
