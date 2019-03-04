@@ -1,14 +1,14 @@
 clear;format long;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
 
-Kmax = 1000;
+Kmax = 10000;
 
 %Samples
-y = -1 + 2*rand(Kmax,1);
+y = rand(Kmax,1);
 
 %Degree/ cardinality of the basis
-N = 10;
-f = @(x,a) exp(a*x); %Here 'a' varies and the basis set has 'a' that are pairwise distinct
+N = 12;
+f = @(x,a) x.^(0.5*a); %Here 'a' varies and the basis set has 'a' that are pairwise distinct
 coeffs = 0:(N-1);
 
 %Initialize quad rule
@@ -27,8 +27,8 @@ for D=N:(Kmax-1)
    
    % Apply Caratheodory's and determine the node that will be removed
     [alpha, k] = min(w(c>0)./c(c>0));
-    %[alpha, k] = max(w(c>0)./c(c>0));
-    id = find(c > 0);
+    %[alpha, k] = max(w(c<0)./c(c<0));
+    id = find(c > 0);%find(c < 0)
     k = id(k);
 
     %Node removal
