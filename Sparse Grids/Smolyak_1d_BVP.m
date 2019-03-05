@@ -1,7 +1,6 @@
 clear;clc; 
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
-
-Npts = 100;
+Npts = 20;
 dx = 1.0/Npts;
 x = (0:dx:1)';
 xmid = ( x(1:end-1) + x (2:end) ) / 2.0 ;
@@ -14,25 +13,29 @@ sigma = 1.0;
 polyBasis = 'Legendre';
 quadrature = 'ClenshawCurtis';
 growth = @(x) 2^(x-1);
-%mu = [];
+%mu = [];1
 %var = [];
-skew = [];
-kurt = [];
+% skew = [];
+% kurt = [];
 numpts = [];
-exact_mean = 0.595340160418040;
-exact_variance = 0.080571966133941;
-exact_skewness = 0.285214735020665;
-exact_kurtosis = 1.493438201045323;
+%exact_mean = 0.529175686352757; %d=2
+exact_mean = 0.586605976838356; %d=5
+error_mean = [];
+% exact_variance = 0.080571966133941;1
+% exact_skewness = 0.285214735020665;
+% exact_kurtosis = 1.493438201045323;
+u_sol = [];
 %[xi_mse,w_mse] = smolyakSparseGrid(d,7,growth, quadrature);
-xi_sample = -1+2*rand(d,2e6);
+xi = -1+2*rand(d,1e6);
 for k=[2,3,4,5,6,7,8]
     umean = 0;
     [xi,w] = smolyakSparseGrid(d,k,growth, quadrature);
     %Rescaling to the domain [0,1]---- not sure why I am dividing by 2^d- figure it out dumbass!.
     %xi = 0.5*(xi+1);
     %w = w/2^d;
-    u_mid = zeros(size(w));
-    for ii=1:length(xi)
+    %u_mid = zeros(size(w));
+    u_mid = [];
+    for ii=10:length(xi)
     %Solution of the ODE
         %1) Computing the random diffusivity
         phi = sin((l-0.5)*pi*xmid');
@@ -44,14 +47,15 @@ for k=[2,3,4,5,6,7,8]
         b = zeros(Npts-1,1) ;
         b(1) = -(a(1)/(dx^2))*u_left;
         u = A\b;
-        u_mid(1,ii) = u(Npts/2);
-        umean = umean + [1;u;0];
+        %u_mid(1,ii) = u(Npts/2);
+        u_mid = [u_mid; u(Npts/2)];
+        error_mean = [error_mean; abs(mean(u_mid) - exact_mean)];
+        %u_sol = [u_sol, [1;u;0]];
         %plot(x,[1;u;0]);
         %hold on;
     end
-    umean = umean/length(xi);
-    plot(x,umean);
-    hold on;
+    %plot(x,umean);
+    %hold on;
     degree = 3; %maximum degree of the multivariate polynomial---------experiment on this
     lexOrdering = monomialDegrees(d,degree);
     %Pre-computing the normalization factors
@@ -68,8 +72,8 @@ for k=[2,3,4,5,6,7,8]
     %ap_var = dotprod((fapprox' - fhat(1,1)).^2,w');
     %ap_skew = dotprod(((fapprox' - fhat(1,1))/sqrt(ap_var)).^3,w');
     %ap_kurt = dotprod(((fapprox' - fhat(1,1))/sqrt(ap_var)).^4,w');
-    %fhat(1,1)
-    %error_mean = [error_mean;abs(fhat(1,1) - exact_mean)];
+    fhat(1,1)
+    error_mean = [error_mean;abs(fhat(1,1) - exact_mean)];
     %error_var = [error_var;abs(var(fapprox) - exact_variance)];
     %error_skew = [error_skew;abs(skewness(fapprox,1) - exact_skewness)];
     %error_kurt = [error_kurt;abs(kurtosis(fapprox,1) - exact_kurtosis)];
@@ -79,3 +83,18 @@ for k=[2,3,4,5,6,7,8]
     %kurt = [kurt;ap_kurt];
     
 end
+
+
+%Plots for the 'UQ' stuff
+figure(2)
+mu = mean(u_sol,2);
+sdev = std(u_sol')';
+plot(x,mu+sdev,'b');
+hold on;
+plot(x,mu-sdev,'b');
+x2 = [x, fliplr(x)];
+inBetween = [mu+sdev, fliplr(mu-sdev)];
+s = fill(x2, inBetween, 'b');
+alpha(s, 0.5);
+hold on;
+plot(x,mu,'r');
