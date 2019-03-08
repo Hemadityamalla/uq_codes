@@ -7,9 +7,13 @@ Kmax = 10000;
 y = rand(Kmax,1);
 
 %Degree/ cardinality of the basis
-N = 12;
-f = @(x,a) x.^(0.5*a); %Here 'a' varies and the basis set has 'a' that are pairwise distinct
-coeffs = 0:(N-1);
+N = 100;
+%f = @(x,a) x.^(0.5*(a-1)); %Here 'a' varies and the basis set has 'a' that are pairwise distinct
+%f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(x.^(k/2 + 1/3)); %this must have the coeffs starting from 1
+%f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(log(x).*x.^(k/2));
+%f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(sin(x).*x.^(k/2));
+f = @(x,a) exp(x.*(a-1));
+coeffs = [1,rand(1,N-1)];
 
 %Initialize quad rule
 x = y(1:N);
@@ -36,3 +40,15 @@ for D=N:(Kmax-1)
     x(k, :) = []; w(k) = [];
     
 end
+
+[xclen,wclen] = clencurt(100);
+xclen = (1 + xclen)*0.5;
+wclen = wclen/2;
+
+%dotprod(sin(15*xclen)',wclen) %Assumed to be the exact value
+
+%dotprod(sin(15*x)',w)
+
+dotprod(xclen'.^25,wclen) %Assumed to be the exact value
+
+dotprod(x'.^25,w)
