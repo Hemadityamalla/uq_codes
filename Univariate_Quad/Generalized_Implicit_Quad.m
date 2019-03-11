@@ -7,7 +7,7 @@ Kmax = 10000;
 y = rand(Kmax,1);
 
 %Degree/ cardinality of the basis
-N = 100;
+N = 10;
 %f = @(x,a) x.^(0.5*(a-1)); %Here 'a' varies and the basis set has 'a' that are pairwise distinct
 %f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(x.^(k/2 + 1/3)); %this must have the coeffs starting from 1
 %f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(log(x).*x.^(k/2));
@@ -41,14 +41,10 @@ for D=N:(Kmax-1)
     
 end
 
-[xclen,wclen] = clencurt(100);
-xclen = (1 + xclen)*0.5;
-wclen = wclen/2;
+%Numerical tests
 
-%dotprod(sin(15*xclen)',wclen) %Assumed to be the exact value
+%Integration with monomial of order N-1
+exact = 1/(N-1)
+dotprod(x'.^(N-1),w)
 
-%dotprod(sin(15*x)',w)
-
-dotprod(xclen'.^25,wclen) %Assumed to be the exact value
-
-dotprod(x'.^25,w)
+%Integration with cont. Genz function
