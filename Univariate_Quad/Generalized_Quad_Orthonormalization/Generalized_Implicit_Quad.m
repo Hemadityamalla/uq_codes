@@ -11,7 +11,7 @@ for N = [5:5:30]
     mean_error = 0.0;
 for iter = 1:10
     %QRule1
-    %f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(log(x).*x.^(k/2)); coeffs = 1:N;
+    f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(log(x).*x.^(k/2)); coeffs = 1:N;
     %QRule2
     %f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(x.^(k/2 + 1/3)); coeffs = 1:N;
     %QRule3
@@ -19,7 +19,7 @@ for iter = 1:10
     %QRule4
     %f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(sin(x).*x.^(k/2)); coeffs = 1:N;
     %QRule5
-    f = @(x,a) exp(x.*(a-1)); coeffs = [1,rand(1,N-1)]; coeffs = [1,rand(1,N-1)];
+    %f = @(x,a) exp(x.*(a-1)); coeffs = [1,rand(1,N-1)]; coeffs = [1,rand(1,N-1)];
 
     %Initialize quad rule
     x = y(1:N);
@@ -32,6 +32,9 @@ for iter = 1:10
        w = [((D)/(D+1))*w;1./(D+1)];
        %Update weights
        V = general_vandermonde(x, f, coeffs);
+       %orthonormalize the basis
+       [Q,R] = qr(V',0);
+       V = Q';
        nullVec = null(V);
        c = nullVec(:,1);
 
@@ -62,12 +65,12 @@ for iter = 1:10
     %approx = dotprod((x' < 0.5)*0 + (x' >= 0.5).*exp(0.5*x'), w);
 
     %4) Integration with corner peak Genz function
-    exact = 1./6;
-    approx = dotprod(1./(1 + 5*x').^2, w);
+%     exact = 1./6;
+%     approx = dotprod(1./(1 + 5*x').^2, w);
     
     %5) Integration with corner peak Genz function
-%      exact = -1./2116;
-%      approx = dotprod((x'.^45).*log(x'), w);
+     exact = -1./2116;
+     approx = dotprod((x'.^45).*log(x'), w);
     
     %6) Integration with highly oscillatory function
 %     exact = (2./55)*sin(55./2)^2;
