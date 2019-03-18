@@ -17,9 +17,9 @@ for iter = 1:10
     %QRule3
     %f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(x.^(k/2 - 2/3)); coeffs = 1:N;
     %QRule4
-    f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(sin(x).*x.^(k/2)); coeffs = 1:N;
+    %f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(sin(x).*x.^(k/2)); coeffs = 1:N;
     %QRule5
-    %f = @(x,a) exp(x.*(a-1)); coeffs = [1,rand(1,N-1)]; coeffs = [1,rand(1,N-1)];
+    f = @(x,a) exp(x.*(a-1)); coeffs = [1,rand(1,N-1)]; coeffs = [1,rand(1,N-1)];
 
     %Initialize quad rule
     x = y(1:N);
@@ -62,24 +62,24 @@ for iter = 1:10
     %approx = dotprod((x' < 0.5)*0 + (x' >= 0.5).*exp(0.5*x'), w);
 
     %4) Integration with corner peak Genz function
-    %exact = 1./6;
-    %approx = dotprod(1./(1 + 5*x').^2, w);
+    exact = 1./6;
+    approx = dotprod(1./(1 + 5*x').^2, w);
     
     %5) Integration with corner peak Genz function
-     exact = -1./2116;
-     approx = dotprod((x'.^45).*log(x'), w);
+%      exact = -1./2116;
+%      approx = dotprod((x'.^45).*log(x'), w);
     
     %6) Integration with highly oscillatory function
-    exact = (2./55)*sin(55./2)^2;
-    approx = dotprod(sin(55*x'),w);
+%     exact = (2./55)*sin(55./2)^2;
+%     approx = dotprod(sin(55*x'),w);
     mean_error = mean_error + abs(exact - approx);
 end
-    mean_error = mean_error/iter
-    if N == 5
-        dlmwrite('Errors_quad6_fn6.dat',mean_error);
-    else
-        dlmwrite('Errors_quad6_fn6.dat',mean_error,'-append');
-    end
+     mean_error = mean_error/iter
+%     if N == 5
+%         dlmwrite('Errors_quad6_fn6.dat',mean_error);
+%     else
+%         dlmwrite('Errors_quad6_fn6.dat',mean_error,'-append');
+%     end
 end
  
 %3) Integration with osc. Genz function

@@ -6,15 +6,15 @@ N = 5:5:30;
 iter = 1;
 for ii = [1,2,5,6]
     %F1
-    error.f1{iter} = csvread(strcat('Errors_quad',num2str(ii),'_fn1.dat'));
+    error.f1{iter} = [(5:5:30)',csvread(strcat('Errors_quad',num2str(ii),'_fn1.dat'))];
     %F2
-    error.f2{iter} = csvread(strcat('Errors_quad',num2str(ii),'_fn2.dat'));
+    error.f2{iter} = [(5:5:30)',csvread(strcat('Errors_quad',num2str(ii),'_fn2.dat'))];
     %F3
-    error.f3{iter} = csvread(strcat('Errors_quad',num2str(ii),'_fn4.dat'));
+    error.f3{iter} = [(5:5:30)',csvread(strcat('Errors_quad',num2str(ii),'_fn4.dat'))];
     %F4
-    error.f4{iter} = csvread(strcat('Errors_quad',num2str(ii),'_fn5.dat'));
+    error.f4{iter} = [(5:5:30)',csvread(strcat('Errors_quad',num2str(ii),'_fn5.dat'))];
     %F5
-    error.f5{iter} = csvread(strcat('Errors_quad',num2str(ii),'_fn6.dat'));
+    error.f5{iter} = [(5:5:30)',csvread(strcat('Errors_quad',num2str(ii),'_fn6.dat'))];
     iter = iter + 1;
 end
 
@@ -55,11 +55,11 @@ for ii=1:8
     error_f5(end+1) = abs(exact - approx);
 end
 
-error.f1{end+1} = error_f1;
-error.f2{end+1} = error_f2;
-error.f3{end+1} = error_f3;
-error.f4{end+1} = error_f4;
-error.f5{end+1} = error_f5;
+error.f1{end+1} = [(5:5:40)',error_f1'];
+error.f2{end+1} = [(5:5:40)',error_f2'];
+error.f3{end+1} = [(5:5:40)',error_f3'];
+error.f4{end+1} = [(5:5:40)',error_f4'];
+error.f5{end+1} = [(5:5:40)',error_f5'];
 
 error_f1 = [];
 error_f2 = [];
@@ -98,40 +98,57 @@ for ii=1:4
     error_f5(end+1) = abs(exact - approx);
 end
 
-error.f1{end+1} = error_f1;
-error.f2{end+1} = error_f2;
-error.f3{end+1} = error_f3;
-error.f4{end+1} = error_f4;
-error.f5{end+1} = error_f5;
+error.f1{end+1} = [(5:5:20)',error_f1'];
+error.f2{end+1} = [(5:5:20)',error_f2'];
+error.f3{end+1} = [(5:5:20)',error_f3'];
+error.f4{end+1} = [(5:5:20)',error_f4'];
+error.f5{end+1} = [(5:5:20)',error_f5'];
 
 %Plots
-N1 = [5:5:30];
+xpos = 500;ypos = 500; width = 1000; height = 800;
 figure(1)
 for ii=1:6
-   loglog(1:length(error.f1{ii}), error.f1{ii}); 
+   loglog(error.f1{ii}(:,1), error.f1{ii}(:,2),'-o'); 
    hold on;
 end
+xlabel('Number of Points'); ylabel('Absolute Error'); xlim([4,44]);
+legend('Q1','Q2','Q3','Q4','Q1 lit.','Q2 lit.');
+grid on;set(gcf,'Position',[xpos ypos width height]); box on;
+
 
 figure(2)
 for ii=1:6
-   loglog(1:length(error.f2{ii}), error.f2{ii}); 
+   loglog(error.f2{ii}(:,1), error.f2{ii}(:,2),'-o'); 
    hold on;
 end
+xlabel('Number of Points'); ylabel('Absolute Error'); xlim([4,44]);
+legend('Q1','Q2','Q3','Q4','Q1 lit.','Q2 lit.');
+grid on;set(gcf,'Position',[xpos ypos width height]); box on;
 
 figure(3)
 for ii=1:6
-   loglog(1:length(error.f3{ii}), error.f3{ii}); 
+   loglog(error.f3{ii}(:,1), error.f3{ii}(:,2),'-o'); 
    hold on;
 end
+xlabel('Number of Points'); ylabel('Absolute Error'); xlim([4,44]);
+legend('Q1','Q2','Q3','Q4','Q1 lit.','Q2 lit.');
+grid on;set(gcf,'Position',[xpos ypos width height]); box on;
 
 figure(4)
 for ii=1:6
-   loglog(1:length(error.f4{ii}), error.f4{ii}); 
+   loglog(error.f4{ii}(:,1), error.f4{ii}(:,2),'-o'); 
    hold on;
 end
+xlabel('Number of Points'); ylabel('Absolute Error'); xlim([4,44]);
+legend('Q1','Q2','Q3','Q4','Q1 lit.','Q2 lit.');
+grid on;set(gcf,'Position',[xpos ypos width height]); box on;
+
 
 figure(5)
 for ii=1:6
-   loglog(1:length(error.f5{ii}), error.f5{ii}); 
+   loglog(error.f5{ii}(:,1), error.f5{ii}(:,2),'-o'); 
    hold on;
 end
+xlabel('Number of Points'); ylabel('Absolute Error'); xlim([4,44]);
+legend('Q1','Q2','Q3','Q4','Q1 lit.','Q2 lit.');
+grid on;set(gcf,'Position',[xpos ypos width height]); box on;
