@@ -105,7 +105,7 @@ end
 % error.f5{end+1} = [(5:5:20)',error_f5'];
 
 %Plots
-xpos = 500;ypos = 500; width = 1000; height = 800;nQuads = 7; xrange = [1,25];
+xpos = 500;ypos = 500; width = 500; height = 400;nQuads = 7; xrange = [1,25];
 figure(1)
 for ii=1:nquad
    semilogy(error.f1{ii}(:,1), error.f1{ii}(:,2),'-o'); 

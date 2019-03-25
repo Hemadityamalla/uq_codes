@@ -3,7 +3,7 @@
 
 function main(Qrule, testFn)
 
-Kmax = 5000;
+Kmax = 1000;
 % Qrule = 1;
 % testFn = 2;
 switch testFn
@@ -20,7 +20,7 @@ switch testFn
 end
 
 %Degree/ cardinality of the basis
-for N = [2:2:20]
+for N = [5:5:30]
     mean_error = 0.0;
     switch Qrule
     case 1
@@ -37,13 +37,17 @@ for N = [2:2:20]
     f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(sin(x).*x.^(k/2)); coeffs = 1:N;
     case 5
     %QRule5
-    %f = @(x,k) 1./(1 + k*x); coeffs = 1 - 1./sqrt(1:N);
-    f = @(x,k) x.^(k-1); coeffs = 1:N;
+    f = @(x,k) 1./(1 + k*x); coeffs = 1 - 1./sqrt(1:N);
+    %f = @(x,k) x.^(k-1); coeffs = 1:N;
     end
-    
-for iter = 1:10
+Navg = 50;
+for iter = 1:Navg
     %Samples
-    y = rand(Kmax,1);
+    if  Qrule == 5
+        y = -1 + 2*rand(Kmax,1);
+    else
+        y = rand(Kmax,1);
+    end
     %Initialize quad rule
     x = y(1:N);
     w = ones(N,1)/(N);

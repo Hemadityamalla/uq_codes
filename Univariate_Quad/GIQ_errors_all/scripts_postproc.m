@@ -1,6 +1,6 @@
 close all; clear;clc;set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',16); format long;
 
-nquad = 4;
+nquad = 5;
 N = 5:5:30;
 %Loading the functions
 iter = 1;
@@ -105,7 +105,7 @@ end
 % error.f5{end+1} = [(5:5:20)',error_f5'];
 
 %Plots
-xpos = 500;ypos = 500; width = 500; height = 400;nQuads = 7;
+xpos = 500;ypos = 500; width = 1000; height = 800;nQuads = 7;
 figure(1)
 for ii=1:nquad
    semilogy(error.f1{ii}(:,1), error.f1{ii}(:,2),'-o'); 
