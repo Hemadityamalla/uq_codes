@@ -1,7 +1,7 @@
 close all; clear;clc;format long;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',20);
 
-addpath('/ufs/hemadity/Documents/chebfun');
+addpath('/home/hemaditya/Documents/Approximation_Theory/chebfun');
 
 %Loading the quadrature rules
 

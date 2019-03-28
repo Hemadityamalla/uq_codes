@@ -1,6 +1,5 @@
 clear;clc;set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',16); format long;
 
-nquad = 4;
 N = 5:5:30;
 %Loading the functions
 iter = 1;
@@ -108,7 +107,7 @@ error.f5{end+1} = [(5:5:20)',error_f5'];
 xpos = 500;ypos = 500; width = 1000; height = 800;nQuads = 7;
 figure(1)
 for ii=1:nQuads
-   loglog(error.f1{ii}(:,1), error.f1{ii}(:,2),'-o'); 
+   semilogy(error.f1{ii}(:,1), error.f1{ii}(:,2),'-o'); 
    hold on;
 end
 xlabel('Number of Points'); ylabel('Absolute Error'); xlim([4,44]);
@@ -118,7 +117,7 @@ grid on;set(gcf,'Position',[xpos ypos width height]); box on;
 
 figure(2)
 for ii=1:nQuads
-   loglog(error.f2{ii}(:,1), error.f2{ii}(:,2),'-o'); 
+   semilogy(error.f2{ii}(:,1), error.f2{ii}(:,2),'-o'); 
    hold on;
 end
 xlabel('Number of Points'); ylabel('Absolute Error'); xlim([4,44]);
@@ -127,7 +126,7 @@ grid on;set(gcf,'Position',[xpos ypos width height]); box on;
 
 figure(3)
 for ii=1:nQuads
-   loglog(error.f3{ii}(:,1), error.f3{ii}(:,2),'-o'); 
+   semilogy(error.f3{ii}(:,1), error.f3{ii}(:,2),'-o'); 
    hold on;
 end
 xlabel('Number of Points'); ylabel('Absolute Error'); xlim([4,44]);
@@ -136,7 +135,7 @@ grid on;set(gcf,'Position',[xpos ypos width height]); box on;
 
 figure(4)
 for ii=1:nQuads
-   loglog(error.f4{ii}(:,1), error.f4{ii}(:,2),'-o'); 
+   semilogy(error.f4{ii}(:,1), error.f4{ii}(:,2),'-o'); 
    hold on;
 end
 xlabel('Number of Points'); ylabel('Absolute Error'); xlim([4,44]);
@@ -146,7 +145,7 @@ grid on;set(gcf,'Position',[xpos ypos width height]); box on;
 
 figure(5)
 for ii=1:nQuads
-   loglog(error.f5{ii}(:,1), error.f5{ii}(:,2),'-o'); 
+   semilogy(error.f5{ii}(:,1), error.f5{ii}(:,2),'-o'); 
    hold on;
 end
 xlabel('Number of Points'); ylabel('Absolute Error'); xlim([4,44]);
