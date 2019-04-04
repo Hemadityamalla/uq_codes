@@ -56,6 +56,9 @@ for N = [5:5:30]
     case 6
     %QRule6
     f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(x.^(k/2 - 1/3)); coeffs = 1:N;
+    case 7
+    %QRule7
+    f = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(haar(k,x)); coeffs = 1:N;
     end
 Navg = 50;
 for iter = 1:Navg
@@ -97,12 +100,12 @@ for iter = 1:Navg
     mean_error = mean_error + abs(exact - approx);
 end
      mean_error = mean_error/iter
-    fname = strcat('Errors_quad',num2str(Qrule),'_fn',num2str(testFn),'.dat');
-    if N == 5
-        dlmwrite(fname,mean_error);
-    else
-        dlmwrite(fname,mean_error,'-append');
-    end
+%     fname = strcat('Errors_quad',num2str(Qrule),'_fn',num2str(testFn),'.dat');
+%     if N == 5
+%         dlmwrite(fname,mean_error);
+%     else
+%         dlmwrite(fname,mean_error,'-append');
+%     end
 end
 
 end
