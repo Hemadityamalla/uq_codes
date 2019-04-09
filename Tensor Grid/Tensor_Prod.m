@@ -24,5 +24,5 @@ for ftype=[1:6]
         numpts(end+1) = length(eval_pts);
         error(end+1) = mean(avgErr);
     end
-    dlmwrite(strcat('Tensor_f',num2str(ftype),'.dat'),[numpts',error'],'precision','%2.16f');
+    dlmwrite(strcat('Tensor_f',num2str(ftype),'d',num2str(d),'.dat'),[numpts',error'],'precision','%2.16f');
 end
