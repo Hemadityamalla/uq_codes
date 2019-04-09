@@ -1,23 +1,5 @@
 function main(fn, qrule, d)
 
-
-
-switch fn
-    case 1
-        %Oscillatory
-        u = @(x) cos(2*pi*0.3 + 0.5*(sum(x,2)));
-    case 2
-        %Product peak
-        u = @(x) (0.5^(-2) + x.^2).^(-1);
-    case 3
-        
-    case 4
-        f = @(x) exp(-0.5*sum(abs(x-0.5),2));
-    case 5
-        
-    case 6
-
-%
 %f = @(x) cos(2*pi*0.3 + 0.5*(sum(x,2)));
 f = @(x) (prod(x,2) <= 0)*0 + (prod(x,2) > 0).*exp(0.5*sum(x,2)); %Discontinuous
 d = 1; %dimension of the random vector
