@@ -1,12 +1,12 @@
 clear;clc;format long;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',16);
 
-d=5;
+d=6;
 nAvg = 100;
 for ftype=[1:6]
     error = [];
     numpts = [];
-    for pts=[1,2,3,4]
+    for pts= 4
         q = (2^pts)-1;
         [xi,w] = clencurt(q);
         xi = 0.5*(xi + 1);
