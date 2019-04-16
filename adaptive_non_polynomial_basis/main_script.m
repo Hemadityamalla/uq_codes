@@ -2,17 +2,18 @@ clear;clc; format long;
 
 
 %points used for piecewise linear interpolation
-Kmax = 5000;
+Kmax = 1000;
 
+f = @(x) 1.0*(x > 0.5);%Test function to be integrated
 
-
-f = @(x) exp(-x.^2/2)/sqrt(2*pi);%Test function to be integrated
-
-exact = 0.5*erf(1.0/sqrt(2));
-error = [];
-for degree = 2:20
-    [x,w] = adaptive_quad(degree,f,Kmax);
-    error = [error;abs(dotprod(f(x'),w)-exact)];
+exact = 0.5;
+error_adaptive = [];
+error_trad = [];
+for degree = 5:5:100
+    [xa,wa] = adaptive_quad(degree,f,Kmax);
+    [xt,wt] = fixed_implict_quad(degree,Kmax);
+    error_adaptive = [error_adaptive;abs(dotprod(f(xa'),wa)-exact)];
+    error_trad = [error_trad;abs(exact - dotprod(f(xt'),wt))];
 end
-
-plot(2:20,error);
+figure(2);
+semilogy(5:5:60,error_adaptive,'b',5:5:60,error_trad,'r');
