@@ -1,5 +1,5 @@
 function [x,w] = fixed_implict_quad(N, Kmax)
-    y = rand(Kmax,1);
+    y = rand(Kmax,1); %Uniform distribution
     %Initialize quad rule
     x = y(1:N);
     w = ones(N,1)/(N);
