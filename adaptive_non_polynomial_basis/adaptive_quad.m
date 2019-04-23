@@ -1,13 +1,14 @@
-
-%run using the command: 
+%run using the command (example): 
 %[x,w] = adaptive_quad(20, @(x)exp(-x.^2/2)/sqrt(2*pi), 1e3)
 
 function [x,w] = adaptive_quad(degree,f,Kmax)
 nodes = 0.5;
-for N=2:degree
+for N=2:5:degree
+    %at any instant length of nodes is (N-1) (if incrementing N by 1)
     y = rand(Kmax,1);
     %Initialize quad rule
-    x = [nodes; y(1:(N-length(nodes)))];
+    x = [nodes; y(1:(N-length(nodes)))]; %essentially you are adding only one node here(if incrementing N by 1)
+    %x = y(1:N);
     w = ones(N,1)/(N);
     %Implicit quad rule
     replace = 0;
@@ -21,7 +22,7 @@ for N=2:degree
           w = ones(length(x),1)/length(x);
        end
        
-       %Update weights
+       
        V = zeros(N, length(x));
        V(1,:) = ones(1,length(x));
        i=1;
@@ -29,8 +30,9 @@ for N=2:degree
            V(ii,:) = interp1(nodes(1:ii),f(nodes(1:ii)),x,'linear','extrap'); 
            i=i+1;
        end
-       for jj=ii+1:N %Must'nt this be i:D
-          V(jj,:) = x.^(jj-1);  
+       %Filling up the rest of the rows with polynomials+
+       for jj=i+1:N %Must'nt this be i:D
+          V(jj,:) = x.^(jj-1);
        end
 
        nullVec = null(V);
@@ -57,6 +59,8 @@ for N=2:degree
 %             replace = 0;
 %         end
 
+
+    %Update weights
      [alpha, k] = min(w(c>0)./c(c>0));
 
         id = find(c > 0);
@@ -70,16 +74,16 @@ for N=2:degree
     end
     %fprintf("Length of x: %d, Length of nodes: %d \n", length(x), length(nodes));
     nodes = x;
-    figure(1)
-    plot(0:0.01:1, interp1(nodes, f(nodes), 0:0.01:1,'linear'),'b.');
-    hold on;
-    plot(nodes, f(nodes),'ro');
-    figure(2);
-    xlim([0,1]);
-    title(num2str(N));
-    ylim([0,degree+1]);
-    scatter(nodes, N*ones(length(nodes),1),10,w,'filled');
-    hold on;
+%     figure(1)
+%     plot(0:0.01:1, interp1(nodes, f(nodes), 0:0.01:1,'linear'),'b.');
+%     hold on;
+%     plot(nodes, f(nodes),'ro');
+%     figure(2);
+%     xlim([0,1]);
+%     title(num2str(N));
+%     ylim([0,degree+1]);
+%     scatter(nodes, N*ones(length(nodes),1),10,w,'filled');
+%     hold on;
 end
 
 end

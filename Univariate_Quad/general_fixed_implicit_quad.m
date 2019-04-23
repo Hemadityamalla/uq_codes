@@ -1,6 +1,8 @@
-function [x,w,y] = fixed_implict_quad(N, Kmax)
-    y = rand(Kmax,1); %Uniform distribution
+function [x,w] = general_fixed_implicit_quad(f_deets, N, y)
+    %Initialize the coefficients of the basis fucntions (if not initialized)
+    f_deets.coeffs = 1:N;
     %Initialize quad rule
+    Kmax = length(y);
     x = y(1:N);
     w = ones(N,1)/(N);
     %Implicit quad rule
@@ -9,8 +11,8 @@ function [x,w,y] = fixed_implict_quad(N, Kmax)
        x = [x;y(D+1)];
        w = [((D)/(D+1))*w;1./(D+1)];
        %Update weights
-       V = fliplr(vander(x))';
-       nullVec = null(V(1:end-1,:)); %Wait, why do I neglect the last column?!
+       V = general_vandermonde(x, f_deets.fn, f_deets.coeffs);
+       nullVec = null(V);
        c = nullVec(:,1);
 
        % Apply Caratheodory's and determine the node that will be removed

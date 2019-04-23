@@ -33,7 +33,7 @@ Kmax = 1000;
             exact = -2*exp(-0.5) + 2*exp(-0.25);
     end
 
-%Degree/ cardinalit.y of the basis
+%Degree/ cardinality of the basis
 for N = [5:5:30]
     mean_error = 0.0;
     switch Qrule
@@ -68,46 +68,23 @@ for iter = 1:Navg
     else
         y = rand(Kmax,1);
     end
-    %Initialize quad rule
-    x = y(1:N);
-    w = ones(N,1)/(N);
 
     %Implicit quad rule
-    for D=N:(Kmax-1)
-       %Node addition
-       x = [x;y(D+1)];
-       w = [((D)/(D+1))*w;1./(D+1)];
-       %Update weights
-       V = general_vandermonde(x, f, coeffs);
-       [Q,~] = qr(V',0);
-       V = Q';
-       nullVec = null(V);
-       c = nullVec(:,1);
-
-       % Apply Caratheodory's and determine the node that will be removed
-        [alpha, k] = min(w(c>0)./c(c>0));
-        %[alpha, k] = max(w(c<0)./c(c<0));
-        id = find(c > 0);%find(c < 0)
-        k = id(k);
-
-        %Node removal
-        w = w-alpha*c;
-        x(k, :) = []; w(k) = [];
-
-    end
-
-
+    basis.fn = f;
+    basis.coeffs = coeffs;
+    [x,w] = general_fixed_implicit_quad(basis,N,y);  
+    
     exact = mean(u(y'));
     approx = dotprod(u(x'),w);
     mean_error = mean_error + abs(exact - approx);
 end
      mean_error = mean_error/iter
-    fname = strcat('Errors_quad',num2str(Qrule),'_fn',num2str(testFn),'.dat');
-    if N == 5
-        dlmwrite(fname,mean_error);
-    else
-        dlmwrite(fname,mean_error,'-append');
-    end
+%     fname = strcat('Errors_quad',num2str(Qrule),'_fn',num2str(testFn),'.dat');
+%     if N == 5
+%         dlmwrite(fname,mean_error);
+%     else
+%         dlmwrite(fname,mean_error,'-append');
+%     end
 end
 
 end
