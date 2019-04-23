@@ -1,4 +1,4 @@
-function [x,w] = fixed_implict_quad(N, Kmax)
+function [x,w,y] = fixed_implict_quad(N, Kmax)
     y = rand(Kmax,1); %Uniform distribution
     %Initialize quad rule
     x = y(1:N);
