@@ -3,7 +3,8 @@
 
 function [x,w] = adaptive_quad(degree,f,Kmax)
 nodes = 0.5;
-for N=2:5:degree
+increments = 5;
+for N=2:increments:degree
     %at any instant length of nodes is (N-1) (if incrementing N by 1)
     y = rand(Kmax,1);
     %Initialize quad rule
@@ -39,37 +40,37 @@ for N=2:5:degree
        c = nullVec(:,1);
 
        % Apply Caratheodorys' and determine the node that will be removed
-%         [alpha1, k1] = min(w(c>0)./c(c>0));
-%         [alpha2, k2] = max(w(c<0)./c(c<0));
-%         id1 = find(c > 0);
-%         id2 = find(c < 0);
-%         k1 = id1(k1);
-%         k2 = id2(k2);
+        [alpha1, k1] = min(w(c>0)./c(c>0));
+        [alpha2, k2] = max(w(c<0)./c(c<0));
+        id1 = find(c > 0);
+        id2 = find(c < 0);
+        k1 = id1(k1);
+        k2 = id2(k2);
         %check to determine which node to eliminate
-%         newidx = length(x(1:end-1)):length(x);
-%         if sum(sum(newidx == [k1,k2]')) == 0
-%             %there is no node removal here, so replace the added sample
-%             %with a new sample
-%             replace = 1;
-%             continue;
-%         else
-%             k = k2; alpha = alpha2; %This is chosen arbitrarily--there is scope for better decision making
-%             %Node removal (two possibilites)
-%             
-%             replace = 0;
-%         end
+        newidx = length(x(1:end-increments)):length(x);
+        if sum(sum(newidx == [k1,k2]')) == 0
+            %there is no node removal here, so replace the added sample
+            %with a new sample
+            replace = 1;
+            continue;
+        else
+            k = k2; alpha = alpha2; %This is chosen arbitrarily--there is scope for better decision making
+            %Node removal (two possibilites)
+            
+            replace = 0;
+         end
 
 
-    %Update weights
-     [alpha, k] = min(w(c>0)./c(c>0));
-
-        id = find(c > 0);
-
-        k = id(k);
- 
+%     %Update weights
+%      [alpha, k] = min(w(c>0)./c(c>0));
+% 
+%         id = find(c > 0);
+% 
+%         k = id(k);
+%  
     w = w-alpha*c;
     x(k, :) = []; w(k) = [];
-        
+%         
         
     end
     %fprintf("Length of x: %d, Length of nodes: %d \n", length(x), length(nodes));
