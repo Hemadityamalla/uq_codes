@@ -6,16 +6,17 @@ Kmax = 1e4;
 
 %f = @(x) 1.0*(x > 0.5);%Test function to be integrated
 f = @(x) x.*(x < 0.5) + (x >= 0.5).*exp(-0.5*x);
+%f = @(x) exp(-x.^2/2)/sqrt(2*pi);
 
 exact = 0.5;
 error_adaptive = [];
 error_trad = [];
-D = 100;
+D = 55;
 range = 5:10:D;
 for degree = range
-    [xa,wa] = adaptive_quad(degree,f,Kmax);
+    [xa,wa,ya] = almost_adaptive_quad(degree,f,Kmax);
     [xt,wt,yt] = fixed_implict_quad(degree,Kmax);
-    error_adaptive = [error_adaptive;abs(dotprod(f(xa'),wa)-mean(f(rand(Kmax,1))))];
+    error_adaptive = [error_adaptive;abs(dotprod(f(xa'),wa)-mean(f(ya)))];
     error_trad = [error_trad;abs(mean(f(yt)) - dotprod(f(xt'),wt))];
     figure(1);
     %xlim([0,1]);
