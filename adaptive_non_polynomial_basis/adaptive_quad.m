@@ -1,7 +1,7 @@
 %run using the command (example): 
-%[x,w] = adaptive_quad(20, @(x)exp(-x.^2/2)/sqrt(2*pi), 1e3)
+%[x,w,y] = adaptive_quad(20, @(x)exp(-x.^2/2)/sqrt(2*pi), 1e3)
 
-function [x,w] = adaptive_quad(degree,f,Kmax)
+function [x,w,y] = adaptive_quad(degree,f,Kmax)
 nodes = 0.5;
 increments = 2;
 for N=2:increments:degree
@@ -12,14 +12,17 @@ for N=2:increments:degree
     %x = y(1:N);
     w = ones(N,1)/(N);
     %Implicit quad rule
-    replace = 0;
-    for D=N:(Kmax-1)
+    replace = 0; D = N;
+    
+    while (D <= (Kmax-1))
        
        if replace == 0
         x = [x;y(D+1)]; %Node addition
         w = [((D)/(D+1))*w;1./(D+1)];
        else
-          x(end) = rand(1,1); %Node replacement
+           newNode = rand(1,1);
+           y(D+1) = newNode;
+          x(end) = newNode; %Node replacement
           w = ones(length(x),1)/length(x);
        end
        
@@ -32,10 +35,15 @@ for N=2:increments:degree
            i=i+1;
        end
        %Filling up the rest of the rows with polynomials+
-       for jj=i+1:N %Must'nt this be i:D
-          V(jj,:) = x.^(jj-1);
+%        for jj=i+1:N %Must'nt this be i:D
+%           V(jj,:) = x.^(jj-1);
+%        end
+%--------------Expt by adding low degree polynomials, OG code above
+        iter = 2;
+       for jj=i+1:N
+          V(jj,:) = x.^(iter-1);
+          iter = iter+1;
        end
-
        nullVec = null(V);
        c = nullVec(:,1);
 
@@ -54,13 +62,13 @@ for N=2:increments:degree
             %there is no node removal here, so replace the added sample
             %with a new sample
             replace = 1;
+            %fprintf('N: %d, D = %d, replacement iteration \n',N,D);
             continue;
         else
             [kidx,~,~] = find(comp_mat,1,'last'); %gives the last occurence
             k = k(kidx); alpha = alpha(kidx);
-            
-            
             replace = 0;
+            D = D + 1;
          end
 
 
@@ -78,16 +86,16 @@ for N=2:increments:degree
     end
     %fprintf("Length of x: %d, Length of nodes: %d \n", length(x), length(nodes));
     nodes = x;
-    figure(1)
-    plot(0:0.01:1, interp1(nodes, f(nodes), 0:0.01:1,'linear'),'b.');
-    hold on;
-    plot(nodes, f(nodes),'ro');
-    figure(2);
-    xlim([0,1]);
-    title(num2str(N));
-    ylim([0,degree+1]);
-    scatter(nodes, N*ones(length(nodes),1),10,w,'filled');
-    hold on;
+%     figure(1)
+%     plot(0:0.01:1, interp1(nodes, f(nodes), 0:0.01:1,'linear'),'b.');
+%     hold on;
+%     plot(nodes, f(nodes),'ro');
+%     figure(2);
+%     xlim([0,1]);
+%     title(num2str(N));
+%     ylim([0,degree+1]);
+%     scatter(nodes, N*ones(length(nodes),1),10,w,'filled');
+%     hold on;
 end
 
 end
