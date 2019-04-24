@@ -37,22 +37,24 @@ T_1_Uniform_Legendre = [0.5;0.498874098722895;0.498891853597968;0.49889185498730
 
 %Evaluating the coefficients and assembling the final function
 error = [];
-order = 1:29;
+order = 1:10;
 for N = order %Number of terms in the polynomial approximation
 T_hat = zeros(N+1,1); %Expansion coefficients array
 T_approx = 0; %Final approximated function variable
-for i=1:N+1
-    %Pre-computing the normalization factors
-    if strcmp(polyBasis,'Hermite')
-        gamma = factorial(0:N); %Hermite
-    else
-        gamma = 2.0./(2*(0:N) + 1.0); %Legendre
-    end
-    polynomial = hermite(xi, i-1);
-    T_hat(i,1) = sum(w.*polynomial.*T_half)/(gamma(i));
-    T_approx = T_approx + T_hat(i,1)*hermite(xi,i-1);
-    
-end
+% for i=1:N+1
+%     %Pre-computing the normalization factors
+%     if strcmp(polyBasis,'Hermite')
+%         gamma = factorial(0:N); %Hermite
+%     else
+%         gamma = 2.0./(2*(0:N) + 1.0); %Legendre
+%     end
+%     polynomial = hermite(xi, i-1);
+%     T_hat(i,1) = sum(w.*polynomial.*T_half)/(gamma(i));
+%     T_approx = T_approx + T_hat(i,1)*hermite(xi,i-1);
+%     
+% end
+poly_coeffs = gpc_coeffs(N, xi, w, T_half, 'hermite');
+T_approx = gpc_polyval(poly_coeffs, xi);
 error = [error;sqrt(sum(w.*(T_half - T_approx).^2))];
     hold on;
     plot(xi, T_approx,'LineWidth',2);
