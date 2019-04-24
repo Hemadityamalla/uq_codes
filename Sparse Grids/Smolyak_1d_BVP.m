@@ -6,7 +6,7 @@ x = (0:dx:1)';
 xmid = ( x(1:end-1) + x (2:end) ) / 2.0 ;
 u_left = 1;
 
-d = 5; %dimension of the random vector
+d = 2; %dimension of the random vector
 l=(1:d)';
 sigma = 1.0;
 % Input for type of orthogonal polynomial basis. Alternatively, use 'Hermite'
@@ -35,7 +35,7 @@ for k=[2,3,4,5,6,7,8]
     %w = w/2^d;
     %u_mid = zeros(size(w));
     u_mid = [];
-    for ii=10:length(xi)
+    for ii=1:length(xi)
     %Solution of the ODE
         %1) Computing the random diffusivity
         phi = sin((l-0.5)*pi*xmid');
@@ -56,17 +56,19 @@ for k=[2,3,4,5,6,7,8]
     end
     %plot(x,umean);
     %hold on;
-    degree = 3; %maximum degree of the multivariate polynomial---------experiment on this
+    degree = 2; %maximum degree of the multivariate polynomial---------experiment on this
     lexOrdering = monomialDegrees(d,degree);
     %Pre-computing the normalization factors
-    gamma = 2.0./(2*(0:degree) + 1.0); %Legendre
-    P = size(lexOrdering,1);
-    fhat = zeros(P,1);
-    fapprox = 0;
-    for i_P = 1:P
-        fhat(i_P,1) = (sum(legendre(xi',lexOrdering(i_P,:)').*u_mid'.*prod(w',2)))/prod(gamma(lexOrdering(i_P,:)+1));
-        %fapprox = fapprox + fhat(i_P,1)*legendre(xi_sample', lexOrdering(i_P,:)');
-    end
+%     gamma = 2.0./(2*(0:degree) + 1.0); %Legendre
+%     P = size(lexOrdering,1);
+%     fhat = zeros(P,1);
+%     fapprox = 0;
+%     for i_P = 1:P
+%         fhat(i_P,1) = (sum(legendre(xi',lexOrdering(i_P,:)').*u_mid.*w'))/prod(gamma(lexOrdering(i_P,:)+1));
+%         %fapprox = fapprox + fhat(i_P,1)*legendre(xi_sample', lexOrdering(i_P,:)');
+%     end
+    fhat = gpc_coeffs(lexOrdering,xi', w'/2^d, u_mid, 'legendre'); %Scaling the weight to match the weighting function of Uniform distribution
+    fapprox = gpc_polyval(fhat, xi', 'legendre', lexOrdering);
     numpts = [numpts;length(w)];
     %w = ones(1,2e6)*5e-7;
     %ap_var = dotprod((fapprox' - fhat(1,1)).^2,w');

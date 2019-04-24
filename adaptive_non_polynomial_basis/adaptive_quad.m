@@ -3,7 +3,7 @@
 
 function [x,w] = adaptive_quad(degree,f,Kmax)
 nodes = 0.5;
-increments = 5;
+increments = 2;
 for N=2:increments:degree
     %at any instant length of nodes is (N-1) (if incrementing N by 1)
     y = rand(Kmax,1);
@@ -48,14 +48,17 @@ for N=2:increments:degree
         k2 = id2(k2);
         %check to determine which node to eliminate
         newidx = length(x(1:end-increments)):length(x);
-        if sum(sum(newidx == [k1,k2]')) == 0
+        k = [k1;k2];alpha = [alpha1;alpha2];
+        comp_mat = (newidx == k);
+        if sum(sum(comp_mat)) == 0
             %there is no node removal here, so replace the added sample
             %with a new sample
             replace = 1;
             continue;
         else
-            k = k2; alpha = alpha2; %This is chosen arbitrarily--there is scope for better decision making
-            %Node removal (two possibilites)
+            [kidx,~,~] = find(comp_mat,1,'last'); %gives the last occurence
+            k = k(kidx); alpha = alpha(kidx);
+            
             
             replace = 0;
          end
@@ -75,16 +78,16 @@ for N=2:increments:degree
     end
     %fprintf("Length of x: %d, Length of nodes: %d \n", length(x), length(nodes));
     nodes = x;
-%     figure(1)
-%     plot(0:0.01:1, interp1(nodes, f(nodes), 0:0.01:1,'linear'),'b.');
-%     hold on;
-%     plot(nodes, f(nodes),'ro');
-%     figure(2);
-%     xlim([0,1]);
-%     title(num2str(N));
-%     ylim([0,degree+1]);
-%     scatter(nodes, N*ones(length(nodes),1),10,w,'filled');
-%     hold on;
+    figure(1)
+    plot(0:0.01:1, interp1(nodes, f(nodes), 0:0.01:1,'linear'),'b.');
+    hold on;
+    plot(nodes, f(nodes),'ro');
+    figure(2);
+    xlim([0,1]);
+    title(num2str(N));
+    ylim([0,degree+1]);
+    scatter(nodes, N*ones(length(nodes),1),10,w,'filled');
+    hold on;
 end
 
 end
