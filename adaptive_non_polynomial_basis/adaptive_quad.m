@@ -24,7 +24,7 @@ for N=2:increments:degree
            y(D+1) = newNode;
           x(end) = newNode; %Node replacement
           w = ones(length(x),1)/length(x);
-       end
+          
        
        
        V = zeros(N, length(x));
