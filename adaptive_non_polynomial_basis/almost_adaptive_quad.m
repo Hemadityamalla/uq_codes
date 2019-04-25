@@ -1,6 +1,10 @@
 %run using the command (example): 
 %[x,w,y] = almost_adaptive_quad(20, @(x)exp(-x.^2/2)/sqrt(2*pi), 1e3)
 
+
+
+%This function has just one basis as the piecewise linear approximation of
+%the integrand
 function [x,w,y] = almost_adaptive_quad(degree,f,Kmax)
 nodes = 0.5;
 increments = 2;
