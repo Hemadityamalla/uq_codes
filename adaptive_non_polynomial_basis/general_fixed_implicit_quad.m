@@ -1,10 +1,16 @@
-function [x,w] = general_fixed_implicit_quad(f_deets, N, y)
+
+%f_deets.fn = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(log(x).*x.^(k/2))
+%f_deets.coeffs = 1:N;
+%[x,w] = general_fixed_implicit_quad(f_deets, N, Kmax);
+
+
+function [x,w,y] = general_fixed_implicit_quad(f_deets, N, Kmax)
     %Initialize the coefficients of the basis fucntions (if not initialized)
     if isempty(f_deets.coeffs)
         f_deets.coeffs = 1:N;
     end
     %Initialize quad rule
-    Kmax = length(y);
+    y = rand(Kmax,1);
     x = y(1:N);
     w = ones(N,1)/(N);
     %Implicit quad rule
