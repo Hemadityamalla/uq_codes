@@ -10,7 +10,7 @@ function [x,w,y] = fixed_implict_quad(N, Kmax)
        w = [((D)/(D+1))*w;1./(D+1)];
        %Update weights
        V = fliplr(vander(x))';
-       nullVec = null(V(1:end,:));
+       nullVec = null(V(1:end-1,:)); %So that we get a rectangular matrix(the last basis is not included)
        c = nullVec(:,1);
 
        % Apply Caratheodory's and determine the node that will be removed
