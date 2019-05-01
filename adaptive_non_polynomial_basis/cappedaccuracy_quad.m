@@ -36,7 +36,11 @@ while (iter < Kmax-1 && node_iter <= D)
     
     %if node_iter>=3 %this makes sure that the function is not added until at least two nodes from the mother set are added
     %V(2,:) = interp1(nodes(1:node_iter-1),f(nodes(1:node_iter-1)),x,'linear','extrap');
-    %V(2,:) = interp1(nodes,f(nodes),x,'linear','extrap');
+    
+    
+    V(2,:) = interp1(nodes,f(nodes),x,'linear','extrap');
+    
+    
     %plot(0:0.01:1, interp1(nodes(1:node_iter-1),f(nodes(1:node_iter-1)),0:0.01:1,'linear','extrap'),'b-',sort(nodes(1:node_iter-1)),f(sort(nodes(1:node_iter-1))),'ro');
     %pause(0.1);
     %fprintf("Interpolation error: %f \n", norm(interp1(nodes(1:node_iter-1),f(nodes(1:node_iter-1)),0:0.01:1,'linear','extrap') - f(0:0.01:1)));
@@ -53,7 +57,7 @@ while (iter < Kmax-1 && node_iter <= D)
     k2 = id2(k2);
     %check to determine which node to eliminate
     [~,newidx] = intersect(x,nodes,'stable');
-    k = [k1;k2];alpha = [alpha1;alpha2];
+    k = [k1;k2]; alpha = [alpha1;alpha2];
     comp_mat = (newidx' == k);
     ndel = sum(comp_mat,2);
     if isequal(ndel,[1;1])
@@ -65,7 +69,7 @@ while (iter < Kmax-1 && node_iter <= D)
         k = k2; alpha = alpha2;
     elseif isequal(ndel,[0;1]) %k2 cannot be used
         k = k1; alpha = alpha1;
-    else                        %Either can be used
+    else                        %Either k1,k2 can be used
         k = k1; alpha = alpha1;
     end
     w = w-alpha*c;
