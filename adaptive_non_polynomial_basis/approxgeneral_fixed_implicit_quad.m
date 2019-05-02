@@ -16,13 +16,14 @@ function [x,w,y] = approxgeneral_fixed_implicit_quad(f_deets, fmarker, N, Kmax)
     x = y(1:N);
     w = ones(N,1)/(N);
     %Implicit quad rule
+    pp = griddedInterpolant(pts, f_deets.fn(pts, fnidx),'linear');
     for D=N:(Kmax-1)
        %Node addition
        x = [x;y(D+1)];
        w = [((D)/(D+1))*w;1./(D+1)];
        %Update weights
        V = general_vandermonde(x, f_deets.fn, f_deets.coeffs);
-       pp = griddedInterpolant(pts, f_deets.fn(pts, fnidx),'linear');
+       
        V(fnidx,:) = pp(x);
        nullVec = null(V);
        c = nullVec(:,1);

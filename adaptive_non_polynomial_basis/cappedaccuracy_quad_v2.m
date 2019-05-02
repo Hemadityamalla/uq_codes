@@ -2,43 +2,35 @@
 %the integrand. Starting with a set of nodes (mother set), the accuracy of the approximation is kept fixed by taking
 %an initial set of points and iteratively adding nodes from the mother set
 %and implicitly generate a QR........
-%run using the command (example): 
-%[x,w,y] = cappedaccuracy_quad([5,5], @(x)exp(-x.^2/2)/sqrt(2*pi), 1e3);
+%run using the commands (example):
+%N = 10; D = 5;[x,w,y] = cappedaccuracy_quad_v2([D,N], @(x)exp(-x.^2/2)/sqrt(2*pi), 1e3);
 
 
-function [x,w,y] = cappedaccuracy_quad(degree,f,Kmax)
+function [x,w,Y] = cappedaccuracy_quad_v2(degree,f,Kmax)
 D = degree(1); N = degree(2);
-y = rand(Kmax,1); %Samples to be used
-nodes = y(1:D); %The mother set
+Y = rand(Kmax,1); %Samples to be used
+nodes = Y(1:D); %Fixed sample set
+y = Y(D+1:end); leftOverSize = length(y);
 
-%Adding points and generating a quad rule
-x = y(D+1:D+1+N-1);
+%Initialize starting QR
+x = y(1:N);
 w = ones(N,1)/(N);
-iter = D+1+N;
-node_iter = 1;
-while (iter < Kmax-1 && node_iter <= D)
-    %Adding a node from the mother set
-    if node_iter <= D %this takes care of the finite size of the mother set
-        x(end+1) = nodes(node_iter);
-        w = [((iter-D-1+1)/(iter-D-1+2))*w;1./(iter-D-1+2)];
-        node_iter = node_iter+1;
-    end
-    %Adding a node from the sample set
-    x(end+1) = y(iter+1);
+iter = N+1;
+added_nodes = 0;
+%Constructing the piecewise linear interpolant
+pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
+while (iter < leftOverSize-1 && added_nodes <= D)
+    
+    x(end+1) = nodes(added_nodes+1); %Adding a node from the fixed sample set
     %Rescaling the weights
-    w = [((iter-D-1)/(iter+1-D-1))*w;1./(iter-D-1+1)];
-    
-    
-    
+    initL = length(w);
+    w = [(initL/(initL+1))*w;1/(initL+1)];
+
     %Construct Vandermonde matrix
-    %V = general_vandermonde(x, @(x,k) x.^(k-1), 1:N); %there is a possibility that I can go beyond N
-    V = fliplr(vander(x))';
-    
-    %if node_iter>=3 %this makes sure that the function is not added until at least two nodes from the mother set are added
-    %V(2,:) = interp1(nodes(1:node_iter-1),f(nodes(1:node_iter-1)),x,'linear','extrap');
+    V = general_vandermonde(x, @(x,k) x.^(k-1), 1:N); 
     
     
-    V(end,:) = interp1(nodes,f(nodes),x,'linear','extrap');
+    V(end,:) = pp(x);
     
     
     %plot(0:0.01:1, interp1(nodes(1:node_iter-1),f(nodes(1:node_iter-1)),0:0.01:1,'linear','extrap'),'b-',sort(nodes(1:node_iter-1)),f(sort(nodes(1:node_iter-1))),'ro');
@@ -47,7 +39,7 @@ while (iter < Kmax-1 && node_iter <= D)
     %end
     
     %Applying Caratheodory
-    nullVec = null(V(1:end-1,:)); %Neglecting the last row since we need a rectangular matrix(one basis less)
+    nullVec = null(V(1:end,:)); %Neglecting the last row since we need a rectangular matrix(one basis less)
     c = nullVec(:,1);
     [alpha1, k1] = min(w(c>0)./c(c>0));
     [alpha2, k2] = max(w(c<0)./c(c<0));
