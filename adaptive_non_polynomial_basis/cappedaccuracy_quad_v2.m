@@ -19,9 +19,15 @@ iter = N+1;
 added_nodes = 0;
 %Constructing the piecewise linear interpolant
 pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
-while (iter < leftOverSize-1 && added_nodes <= D)
+while (iter < leftOverSize-1)
     
-    x(end+1) = nodes(added_nodes+1); %Adding a node from the fixed sample set
+    if added_nodes < D
+        x(end+1) = nodes(added_nodes+1); %Adding a node from the fixed sample set
+        added_nodes = added_nodes+1;
+    elseif added_nodes >= D
+        x(end+1) = y(added_nodes);
+        added_nodes = added_nodes+1;
+    end
     %Rescaling the weights
     initL = length(w);
     w = [(initL/(initL+1))*w;1/(initL+1)];
@@ -30,7 +36,7 @@ while (iter < leftOverSize-1 && added_nodes <= D)
     V = general_vandermonde(x, @(x,k) x.^(k-1), 1:N); 
     
     
-    V(end,:) = pp(x);
+    %V(end,:) = pp(x);
     
     
     %plot(0:0.01:1, interp1(nodes(1:node_iter-1),f(nodes(1:node_iter-1)),0:0.01:1,'linear','extrap'),'b-',sort(nodes(1:node_iter-1)),f(sort(nodes(1:node_iter-1))),'ro');
@@ -39,7 +45,7 @@ while (iter < leftOverSize-1 && added_nodes <= D)
     %end
     
     %Applying Caratheodory
-    nullVec = null(V(1:end,:)); %Neglecting the last row since we need a rectangular matrix(one basis less)
+    nullVec = null(V);
     c = nullVec(:,1);
     [alpha1, k1] = min(w(c>0)./c(c>0));
     [alpha2, k2] = max(w(c<0)./c(c<0));
@@ -48,13 +54,14 @@ while (iter < leftOverSize-1 && added_nodes <= D)
     k1 = id1(k1);
     k2 = id2(k2);
     %check to determine which node to eliminate
-    [~,newidx] = intersect(x,nodes,'stable');
+    [~,newidx] = intersect(x,nodes,'stable'); %Gives only the last element(??)
+    newidx
     k = [k1;k2]; alpha = [alpha1;alpha2];
     comp_mat = (newidx' == k);
     ndel = sum(comp_mat,2);
-    if isequal(ndel,[1;1])
+    if isequal(ndel,[1;1]) %This step here is causing more nodes to be added and nothing to be removed
         %there is no node removal here, moving on with an extra added node
-        fprintf('iter: %d, no deletion \n',iter);
+        fprintf('iter: %d, no deletion \n',iter); 
         iter = iter+1;
         continue;       
     elseif isequal(ndel,[1;0]) %k1 cannot be used
