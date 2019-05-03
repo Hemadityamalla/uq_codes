@@ -20,7 +20,10 @@ added_nodes = 0;
 %Constructing the piecewise linear interpolant
 pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
 while (iter < leftOverSize-1)
-    
+        figure(1)
+    scatter(nodes, ones(length(nodes),1),10,'filled');
+    hold on;
+    scatter(x, iter*ones(length(x),1),10,w,'filled');
     if added_nodes < D
         x(end+1) = nodes(added_nodes+1); %Adding a node from the fixed sample set
         added_nodes = added_nodes+1;
@@ -74,6 +77,7 @@ while (iter < leftOverSize-1)
     w = w-alpha*c;
     x(k, :) = []; w(k) = [];
     iter = iter+1;
+
 end
 %     figure(1)
 %     plot(0:0.01:1, interp1(nodes, f(nodes), 0:0.01:1,'linear'),'b.');

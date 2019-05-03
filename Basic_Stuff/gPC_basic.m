@@ -1,21 +1,21 @@
-clear;
-clc;
+%clear; clc; format long;
 
-N = 5000;
+%x = rand(1e4,1);
 
-mu = 0;
-sigma = 1;
-Z = randn(N,1);
-X = mu + sigma*Z;
+f = @(x) x;
+%gPC approximation
+for degree=6
+N = degree;
+%Generating the quadrature rule
+[xi,w] = gaussQuad(10,'Legendre');
+%xi = (xi+1.0)/2; w = w/2;
+poly_coeffs = gpc_coeffs(N, xi, w, f(xi), 'legendre');
+eval_pts = linspace(min(xi),max(xi),50)';
+Y_approx = gpc_polyval(poly_coeffs, eval_pts);
+% plot(xi,f(xi),'r.',eval_pts,Y_approx,'b-');
+% ylim([-0.7,2])
+% hold on;
+% grid on
+% pause(0.5)
+end
 
-histogram(X,'Normalization','pdf');
-
-Y = exp(X); %Exact function 
-Yn = exp(mu + 0.5*sigma^2)*(1 + sigma*Z + 0.5*sigma^2*(Z.^2 - 1) + (sigma^3/3)*(Z.^3 - 3*Z)); %Approximate function
-nbins = 50;
-histogram(Yn,nbins,'Normalization','pdf');
-
-y = linspace(0,20,N);
-hold on;
-%The pdf below is usually known
-plot(y,1.0./(y*sigma*sqrt(2*pi)).*exp(-(log(y) - mu).^2/(2*sigma^2)),'LineWidth',2);

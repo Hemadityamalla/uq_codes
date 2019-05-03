@@ -4,22 +4,22 @@
 clear;clc; format long;
 
 %Sample points
-Kmax = 1e2;
+Kmax = 1e3;
 
-interp_pts = sort(rand(25,1));
-fn = @(x) exp(-abs(x-0.5));%(x.*(x < 0.5) + (x >= 0.5).*exp(-5*x)); 
-pp = griddedInterpolant(interp_pts, fn(interp_pts),'pchip');
+interp_pts = linspace(0,1,25);
+fn = @(x) exp(-x.^2/2/sqrt(2*pi));%(x.*(x < 0.5) + (x >= 0.5).*exp(-5*x)); 
+pp = griddedInterpolant(interp_pts, fn(interp_pts),'linear');
 f_deets.fn = @(x,k) (k==2)*fn(x) + (k==1).*1 + (k>2).*x.^(k-2);
 f_deets.coeffs = [];
 fnmarker.fnidx = 2; fnmarker.pts = interp_pts;
 
 error_giq = [];
 error_fiq = [];
-D = 55;
-range = D;
-numavg = 1;
+D = 75;
+range = 5:5:D;
+numavg = 10;
 for degree = range
-    %degree
+    degree
     e_giq = 0;
     e_fiq = 0;
     for tt=1:numavg
@@ -33,15 +33,16 @@ for degree = range
 end
 %figure(2);
 %semilogy(range,error_giq,'b',range,error_fiq,'r');
-% figure(1);
-% xx = 0:.001:1;
-% plot(xx, fn(xx));
-% hold on
-% plot(interp_pts, pp(interp_pts), 'o-');
-% 
-% figure(2);
-% loglog(range(1:end-1),error_giq(1:end-1),'b',range(1:end-1),error_fiq(1:end-1),'r');
-% legend('adaptive','fixed');
+figure(1);
+xx = 0:.001:1;
+plot(xx, fn(xx));
+hold on
+plot(interp_pts, pp(interp_pts), 'o-');
+
+figure(2);
+loglog(range(1:end),error_giq(1:end),'bo-',range(1:end),error_fiq(1:end),'r+-');
+xlabel('Number of nodes');ylabel('Error');
+legend('adaptive','fixed');
 
 %Expt. 1
 %Supplying the function into the Vandermonde matrix obviously gives a QR
