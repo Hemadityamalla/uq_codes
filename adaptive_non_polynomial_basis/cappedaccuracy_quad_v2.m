@@ -1,12 +1,26 @@
 %This function has just one basis as the piecewise linear approximation of
-%the integrand. Starting with a set of nodes (mother set), the accuracy of the approximation is kept fixed by taking
+%the integrand. Starting with a set  fixedNodes (mother set), the accuracy of the approximation is kept fixed by taking
 %an initial set of points and iteratively adding nodes from the mother set
 %and implicitly generate a QR........
 %run using the commands (example):
-%N = 10; D = 5;[x,w,y] = cappedaccuracy_quad_v2([D,N], @(x)exp(-x.^2/2)/sqrt(2*pi), 1e2);
+%N = 10; D = 5;[x,w,fixedNodes,y] = cappedaccuracy_quad_v2([D,N], @(x)exp(-x.^2/2)/sqrt(2*pi), 5e2);
 
 
-function [x,w,Y] = cappedaccuracy_quad_v2(degree,f,Kmax)
+%D -- fixed number of nodes that are used to construct a piecewise linear
+%approximation f^D(x)
+%N -- Exactly integrates polynomials of degree upto (N-2) and f^D(x). N is
+%preferrably at least 2*D.
+
+%The following commands can be ran to validate the QR:
+% N = 20;D = 5;[x,w,fixedNodes,y] = cappedaccuracy_quad_v2([D,N], @(x)exp(-x.^2/2)/sqrt(2*pi), 5e2);
+%sum(w) %Must be close to 1.0
+%sum(x.*w) == mean(y)
+%sum(x.^(N-2).*w) == mean(y.^(N-2))
+%pp = griddedInterpolant(sort(fixedNodes), f(sort(fixedNodes)),'linear');
+%sum(pp(x).*w) == mean(pp(x))
+
+
+function [x,w,nodes,Y] = cappedaccuracy_quad_v2(degree,f,Kmax)
 D = degree(1); N = degree(2);
 Y = rand(Kmax,1); %Samples to be used
 nodes = Y(1:D); %Fixed sample set
@@ -22,7 +36,7 @@ added_nodes = 0;
 pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
 while (iter < leftOverSize+D)
 %         figure(1)
-%     scatter(nodes, (iter-1)*ones(length(nodes),1),10,'filled');
+%     %scatter(nodes, (iter-1)*ones(length(nodes),1),10,'filled');
 %     hold on;
 %     scatter(x, iter*ones(length(x),1),10,w,'filled');
     if added_nodes < D
@@ -73,7 +87,7 @@ while (iter < leftOverSize+D)
     elseif isequal(ndel,[0;1]) %k2 cannot be used
         k = k1; alpha = alpha1;
     else                        %Either k1,k2 can be used
-        fprintf("Two nodes can be deleted\n");
+        %fprintf("Two nodes can be deleted\n");
         k = k1; alpha = alpha1;
     end
     w = w-alpha*c;
