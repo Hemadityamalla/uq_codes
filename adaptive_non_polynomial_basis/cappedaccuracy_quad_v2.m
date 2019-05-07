@@ -3,7 +3,7 @@
 %an initial set of points and iteratively adding nodes from the mother set
 %and implicitly generate a QR........
 %run using the commands (example):
-%N = 10; D = 5;[x,w,y] = cappedaccuracy_quad_v2([D,N], @(x)exp(-x.^2/2)/sqrt(2*pi), 1e3);
+%N = 10; D = 5;[x,w,y] = cappedaccuracy_quad_v2([D,N], @(x)exp(-x.^2/2)/sqrt(2*pi), 1e2);
 
 
 function [x,w,Y] = cappedaccuracy_quad_v2(degree,f,Kmax)
@@ -15,31 +15,32 @@ y = Y(D+1:end); leftOverSize = length(y);
 %Initialize starting QR
 x = y(1:N);
 w = ones(N,1)/(N);
-iter = N+1;
+iter = N;
+leftOverIter = N;
 added_nodes = 0;
 %Constructing the piecewise linear interpolant
 pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
-while (iter < leftOverSize-1)
-        figure(1)
-    scatter(nodes, ones(length(nodes),1),10,'filled');
-    hold on;
-    scatter(x, iter*ones(length(x),1),10,w,'filled');
+while (iter < leftOverSize+D)
+%         figure(1)
+%     scatter(nodes, (iter-1)*ones(length(nodes),1),10,'filled');
+%     hold on;
+%     scatter(x, iter*ones(length(x),1),10,w,'filled');
     if added_nodes < D
         x(end+1) = nodes(added_nodes+1); %Adding a node from the fixed sample set
         added_nodes = added_nodes+1;
     elseif added_nodes >= D
-        x(end+1) = y(added_nodes);
-        added_nodes = added_nodes+1;
+        x(end+1) = y(leftOverIter+1);
+        leftOverIter = leftOverIter + 1;
     end
     %Rescaling the weights
-    initL = length(w);
-    w = [(initL/(initL+1))*w;1/(initL+1)];
+    %initL = length(w);
+    w = [(iter/(iter+1))*w;1/(iter+1)];
 
     %Construct Vandermonde matrix
     V = general_vandermonde(x, @(x,k) x.^(k-1), 1:N); 
     
     
-    %V(end,:) = pp(x);
+    V(end,:) = pp(x);
     
     
     %plot(0:0.01:1, interp1(nodes(1:node_iter-1),f(nodes(1:node_iter-1)),0:0.01:1,'linear','extrap'),'b-',sort(nodes(1:node_iter-1)),f(sort(nodes(1:node_iter-1))),'ro');
@@ -57,7 +58,7 @@ while (iter < leftOverSize-1)
     k1 = id1(k1);
     k2 = id2(k2);
     %check to determine which node to eliminate
-    [~,newidx] = intersect(x,nodes,'stable'); %Gives only the last element(??)
+    [~,newidx] = intersect(x,nodes,'stable'); %Gives only the last element
     newidx
     k = [k1;k2]; alpha = [alpha1;alpha2];
     comp_mat = (newidx' == k);
@@ -72,12 +73,12 @@ while (iter < leftOverSize-1)
     elseif isequal(ndel,[0;1]) %k2 cannot be used
         k = k1; alpha = alpha1;
     else                        %Either k1,k2 can be used
+        fprintf("Two nodes can be deleted\n");
         k = k1; alpha = alpha1;
     end
     w = w-alpha*c;
     x(k, :) = []; w(k) = [];
     iter = iter+1;
-
 end
 %     figure(1)
 %     plot(0:0.01:1, interp1(nodes, f(nodes), 0:0.01:1,'linear'),'b.');

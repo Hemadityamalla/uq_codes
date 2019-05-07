@@ -1,3 +1,3 @@
 function y = test1D(X)
 
-y = double( X <= 0.5 );
+y = exp(X+1);

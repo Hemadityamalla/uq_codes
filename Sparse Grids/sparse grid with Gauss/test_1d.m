@@ -41,20 +41,18 @@ metamodelQuad.Input     = myInput;
 metamodelQuad.Type      = 'Metamodel';
 metamodelQuad.MetaType  = 'PCE';
 metamodelQuad.Method          = 'quadrature'; % using quadrature to compute coefficients
-metamodelQuad.Quadrature.Type = 'Full';
-metamodelQuad.Quadrature.Level = 15;
-metamodelQuad.Degree = 10;
+metamodelQuad.Degree = 1;
 
 myPCE_Quad           = uq_createModel(metamodelQuad);
 uq_print(myPCE_Quad)
 myPCE_Quad.PCE.Coefficients
 
 %Evaluating the gPC at some samples
-xtest = uq_getSample(1e5);
-Y = uq_evalModel(xtest);
-histogram(Y)
+xtest = linspace(-1,1,500);
+Y = uq_evalModel(xtest');
+plot(xtest,Y,'b.');
 hold on;
-histogram(test1D(xtest))
+plot(xtest,test1D(xtest),'r-');
 
 %% some analysis of PCE:
 
