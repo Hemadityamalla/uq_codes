@@ -65,6 +65,9 @@ while (iter < leftOverSize+D)
     %Applying Caratheodory
     nullVec = null(V);
     c = nullVec(:,1);
+    if size(nullVec,2) > 1
+        size(nullVec,2)
+    end
     [alpha1, k1] = min(w(c>0)./c(c>0));
     [alpha2, k2] = max(w(c<0)./c(c<0));
     id1 = find(c > 0);
@@ -73,13 +76,13 @@ while (iter < leftOverSize+D)
     k2 = id2(k2);
     %check to determine which node to eliminate
     [~,newidx] = intersect(x,nodes,'stable'); %Gives only the last element
-    newidx
+    %newidx
     k = [k1;k2]; alpha = [alpha1;alpha2];
     comp_mat = (newidx' == k);
     ndel = sum(comp_mat,2);
     if isequal(ndel,[1;1]) %This step here is causing more nodes to be added and nothing to be removed
         %there is no node removal here, moving on with an extra added node
-        fprintf('iter: %d, no deletion \n',iter); 
+        %fprintf('iter: %d, no deletion \n',iter); 
         iter = iter+1;
         continue;       
     elseif isequal(ndel,[1;0]) %k1 cannot be used
