@@ -1,7 +1,7 @@
 close all;clear;clc;format long;
 
 %points used for piecewise linear interpolation
-Kmax = 5e2;
+Kmax = 1e2;
 
 %f = @(x) 1.0*(x > 0.5);%Test function to be integrated
 %f = @(x) x.*(x < 0.5) + (x >= 0.5).*exp(-0.5*x);
@@ -11,7 +11,7 @@ error_giq = [];
 error_fiq = [];
 N = 75;
 range = 5:5:N;
-D = 30;
+D = 5;
 numavg = 10;
 for degree = range
     degree

@@ -26,7 +26,7 @@ Y = rand(Kmax,1); %Samples to be used
 nodes = Y(1:D); %Fixed sample set
 L = Y(D+1:end); Lsize = length(L);
 %Constructing the piecewise linear interpolant
-pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'pchip');
+pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
 %-----------Constructing the starting QR-----------
     %Initialize quad rule
     xstart = L(1:N);
