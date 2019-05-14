@@ -3,7 +3,7 @@
 %an initial set of points and iteratively adding nodes from the mother set
 %and implicitly generate a QR........
 %run using the commands (example):
-%N = 10; D = 5;level = 3;[x,w,fixedNodes,y] = cappedaccuracy_quad_nested([D,N], level,@(x)exp(-x.^2/2)/sqrt(2*pi), 5e2);
+%N = 10; D = 5;level = 3;[QR,y] = cappedaccuracy_quad_nested([D,N], level,@(x)exp(-x.^2/2)/sqrt(2*pi), 5e2);
 
 
 %D -- fixed number of nodes that are used to construct a piecewise linear
@@ -13,7 +13,7 @@
 
 %The following commands can be ran to validate the QR:
 %f = @(x)exp(-x.^2/2)/sqrt(2*pi)
-% N = 5; D = 5;level = 10;[x,w,fixedNodes,y] = cappedaccuracy_quad_nested([D,N], level,f, 5e2);
+% N = 5; D = 5;level = 10;[QR,y] = cappedaccuracy_quad_nested([D,N], level,f, 5e2);
 %sum(w) %Must be close to 1.0
 %abs(sum(x.*w)-mean(y)) < 1e-14
 %abs(sum(x.^(N-2).*w) == mean(y.^(N-2))) < 1e-14
@@ -21,21 +21,23 @@
 %(sum(pp(x).*w) == mean(pp(x))) < 1e-14
 
 
-function [x,w,nodes,Y] = cappedaccuracy_quad_nested(degree,level,f,Kmax)
+function [QR,Y] = cappedaccuracy_quad_nested(degree,level,f,Kmax)
 D = degree(1); N = degree(2);
 Y = rand(Kmax,1); %Samples to be used
-%---------First level--------------
+                                                    %---------First level--------------
 k_level=1;
 nodes = Y(1:D); %Fixed sample set
 L = setdiff(Y,nodes,'stable'); Lsize = length(L);
 %Constructing the piecewise linear interpolant
 pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
+
 %-----------Constructing the starting QR-----------
+    degreeInt = N + (k_level-1);
     %Initialize quad rule
-    xstart = L(1:N);
-    wstart = ones(N,1)/(N);
+    xstart = L(1:degreeInt);
+    wstart = ones(degreeInt,1)/(degreeInt);
     %Implicit quad rule
-    for ii=N:(Lsize-1)
+    for ii=degreeInt:(Lsize-1)
        %Node addition
        xstart = [xstart;L(ii+1)];
        wstart = [((ii)/(ii+1))*wstart;1./(ii+1)];
@@ -65,7 +67,7 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
         x(end+1) = nodes(iter+1-Lsize);
         w = [(iter/(iter+1))*w;1/(iter+1)];
         %Construct Vandermonde matrix
-        V = general_vandermonde(x, @(x,k) x.^(k-1), 1:N); 
+        V = general_vandermonde(x, @(x,k) x.^(k-1), 1:degreeInt); 
         V(end,:) = pp(x);
         %Applying Caratheodory
         nullVec = null(V);
@@ -102,14 +104,19 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
         x(k, :) = []; w(k) = [];
         iter = iter+1;
     end
+    
+    %Storing the generated QR
+    QR{k_level}.nodes = x; QR{k_level}.weights = w;
+    
     %fprintf('\n k= %d QR: ',k_level);
     %x
-    scatter(x, k_level*ones(length(x),1),10,w,'filled');
-    ylim([0, level+2]);
-    hold on;
-%---------------Subsequent levels-------------
+    %scatter(x, k_level*ones(length(x),1),10,w,'filled');
+    %ylim([0, level+2]);
+    %hold on;
+                                        %---------------Subsequent levels-------------
     k_level = 2;
     while k_level <= level
+        degreeInt = N + (k_level-1);
         fprintf('Going to level %d \n',k_level);
         nodes = x; %Fixed sample set
         L = setdiff(Y,nodes,'stable'); Lsize = length(L);
@@ -117,16 +124,16 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
         pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
         %-----------Constructing the starting QR-----------
         %Initialize quad rule
-        xstart = L(1:N);
-        wstart = ones(N,1)/(N);
+        xstart = L(1:degreeInt);
+        wstart = ones(degreeInt,1)/(degreeInt);
         %Implicit quad rule
-        for ii=N:(Lsize-1)
+        for ii=degreeInt:(Lsize-1)
             %Node addition
             xstart = [xstart;L(ii+1)];
             wstart = [((ii)/(ii+1))*wstart;1./(ii+1)];
             %Update weights
             %V = fliplr(vander(x))';
-            V = general_vandermonde(xstart, @(x,k) x.^(k-1), 1:N);
+            V = general_vandermonde(xstart, @(x,k) x.^(k-1), 1:degreeInt);
             V(end,:) = pp(xstart);
             nullVec = null(V(1:end,:));
             c = nullVec(:,1);
@@ -150,7 +157,7 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
             x(end+1) = nodes(iter+1-Lsize);
             w = [(iter/(iter+1))*w;1/(iter+1)];
             %Construct Vandermonde matrix
-            V = general_vandermonde(x, @(x,k) x.^(k-1), 1:N);
+            V = general_vandermonde(x, @(x,k) x.^(k-1), 1:degreeInt);
             V(end,:) = pp(x);
             %Applying Caratheodory
             nullVec = null(V);
@@ -187,11 +194,11 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
             x(k, :) = []; w(k) = [];
             iter = iter+1;
         end
-        
+        QR{k_level}.nodes = x; QR{k_level}.weights = w;
         %fprintf('\n k= %d QR: ',k_level);
         %x
-        scatter(x, k_level*ones(length(x),1),10,w,'filled');
-        hold on;
+        %scatter(x, k_level*ones(length(x),1),10,w,'filled');
+        %hold on;
         k_level = k_level+1;
     end
 
