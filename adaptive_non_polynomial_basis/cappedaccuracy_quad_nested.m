@@ -23,7 +23,7 @@
 
 function [QR,Y] = cappedaccuracy_quad_nested(degree,level,f,Kmax)
 D = degree(1); N = degree(2);
-Y = rand(Kmax,1); %Samples to be used
+Y = randn(Kmax,1); %Samples to be used
                                                     %---------First level--------------
 k_level=1;
 nodes = Y(1:D); %Fixed sample set
@@ -110,9 +110,9 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
     
     %fprintf('\n k= %d QR: ',k_level);
     %x
-    %scatter(x, k_level*ones(length(x),1),10,w,'filled');
-    %ylim([0, level+2]);
-    %hold on;
+    scatter(x, k_level*ones(length(x),1),10,w,'filled');
+    ylim([0, level+2]);
+    hold on;
                                         %---------------Subsequent levels-------------
     k_level = 2;
     while k_level <= level
@@ -197,12 +197,12 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
         QR{k_level}.nodes = x; QR{k_level}.weights = w;
         %fprintf('\n k= %d QR: ',k_level);
         %x
-        %scatter(x, k_level*ones(length(x),1),10,w,'filled');
-        %hold on;
+        scatter(x, k_level*ones(length(x),1),10,w,'filled');
+        hold on;
         k_level = k_level+1;
     end
 
-
+    colorbar
 
 
 end
