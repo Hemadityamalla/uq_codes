@@ -13,7 +13,7 @@
 
 %The following commands can be ran to validate the QR:
 %f = @(x)exp(-x.^2/2)/sqrt(2*pi)
-% N = 5; D = 5;level = 10;[QR,y] = cappedaccuracy_quad_nested([D,N], level,f, 5e2);
+% N = 5; D = 5;level = 10;samples = rand(5e2,1);[QR] = cappedaccuracy_quad_nested([D,N], level,f, samples);
 %sum(w) %Must be close to 1.0
 %abs(sum(x.*w)-mean(y)) < 1e-14
 %abs(sum(x.^(N-2).*w) == mean(y.^(N-2))) < 1e-14
@@ -21,9 +21,9 @@
 %(sum(pp(x).*w) == mean(pp(x))) < 1e-14
 
 
-function [QR,Y] = cappedaccuracy_quad_nested(degree,level,f,Kmax)
+function [QR] = cappedaccuracy_quad_nested(degree,level,f,Y)
 D = degree(1); N = degree(2);
-Y = randn(Kmax,1); %Samples to be used
+Kmax = length(Y); %Sample size
                                                     %---------First level--------------
 k_level=1;
 nodes = Y(1:D); %Fixed sample set
@@ -111,6 +111,8 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
     %fprintf('\n k= %d QR: ',k_level);
     %x
     scatter(x, k_level*ones(length(x),1),10,w,'filled');
+    hold on;
+    scatter(0:0.005:1,k_level*ones(length(0:0.005:1),1),2,'k.');
     ylim([0, level+2]);
     hold on;
                                         %---------------Subsequent levels-------------
@@ -199,6 +201,7 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
         %x
         scatter(x, k_level*ones(length(x),1),10,w,'filled');
         hold on;
+    scatter(0:0.005:1,k_level*ones(length(0:0.005:1),1),2,'k.');
         k_level = k_level+1;
     end
 
