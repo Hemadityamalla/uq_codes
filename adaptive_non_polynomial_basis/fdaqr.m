@@ -12,7 +12,7 @@
 %preferrably at least 2*D.
 
 %The following commands can be ran to validate the QR:
-% N = 20;D = 5;y=rand(5e2,1);[x,w,fixednodes] = cappedaccuracy_quad_v3([D,N], @(x)exp(-x.^2/2)/sqrt(2*pi), y);
+% --------------------update this---------------
 %sum(w) %Must be close to 1.0
 %sum(x.*w) == mean(y)
 %sum(x.^(N-2).*w) == mean(y.^(N-2))
@@ -20,13 +20,14 @@
 %sum(pp(x).*w) == mean(pp(x))
 
 
-function [x,w,nodes] = cappedaccuracy_quad_v3(degree,f,Y)
+function [x,w] = fdaqr(degree,f_marg,L,nodes)
 D = degree(1); N = degree(2);
-Kmax = length(Y); %Sample size
-nodes = Y(1:D); %Fixed sample set
-L = Y(D+1:end); Lsize = length(L);
+Kmax = length(nodes) + length(L); %Sample size
+Lsize = length(L);
 %Constructing the piecewise linear interpolant
-pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
+%Sorting the nodes
+[sortednodes,arrang] = sort(nodes);
+pp = griddedInterpolant(sortednodes, f_marg(arrang) ,'linear');
 %-----------Constructing the starting QR-----------
     %Initialize quad rule
     xstart = L(1:N);
@@ -99,9 +100,5 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
         x(k, :) = []; w(k) = [];
         iter = iter+1;
     end
-
-
-
-
 end
                                                                                                                                                                             
