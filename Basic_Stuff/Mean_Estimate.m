@@ -12,11 +12,13 @@ for i=n
 end
 exact_mean = (exp(1) - exp(-1))/2;
 figure(1);
-plot(n,mu_y,'b.-');
+semilogx(n,mu_y,'b.-');
 hold on;
-plot(exact_mean*ones(1e6,1),'r');
+semilogx(exact_mean*ones(1e6,1),'r');
 legend('estimated mean','exact mean');
 xlabel('n (Number of samples)'); ylabel('Mean of Y');
+xpos = 500;ypos = 500; width = 800; height = 800;
+set(gcf,'Position',[xpos ypos width height])
 figure(2);
 error = abs(mu_y - exact_mean);
 loglog(n,error,'ro-');
@@ -25,4 +27,6 @@ coeffs = polyfit(log(n),log(error'),1);
 y = polyval(coeffs,log(n));
 loglog(n,exp(y),'b');
 xlabel('n (Number of samples)'); ylabel('Absolute error');
-legend('Absolute error ',strcat('line with slope',num2str(coeffs(1))));
+legend('Absolute error ',strcat('line with slope ',num2str(coeffs(1))));
+xpos = 500;ypos = 500; width = 800; height = 800;
+set(gcf,'Position',[xpos ypos width height])
