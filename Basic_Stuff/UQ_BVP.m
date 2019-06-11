@@ -13,7 +13,7 @@ d = 10; sigma = 1 ;
 
 mc_mean = [];
 
-n = [1:50:1e4];
+n = 5*logspace(1,4,100);
 for sim = n
     for jj=[1:1:sim]
         xi = randn(d,1);

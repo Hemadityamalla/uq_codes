@@ -1,24 +1,27 @@
 close all;clear;clc;format long;
 
 %points used for piecewise linear interpolation
-Kmax = 1e2;
+Kmax = 5e2;
 
-%f = @(x) 1.0*(x > 0.5);%Test function to be integrated
+
+%Test function to be integrated
+%f = @(x) 1.0*(x > 0.5);
 %f = @(x) x.*(x < 0.5) + (x >= 0.5).*exp(-0.5*x);
-f = @(x) exp(-abs(x - 0.5)/2)/sqrt(2*pi);
-%f = @(x) exp(-x.^2/2/sqrt(2*pi));
+%f = @(x) exp(-abs(x - 0.5)/2)/sqrt(2*pi);
+f = @(x) exp(-x.^2/2/sqrt(2*pi));
 error_giq = [];
 error_fiq = [];
-N = 75;
+N = 60;
 range = 5:5:N;
-D = 5;
+D = 20;
 numavg = 10;
 for degree = range
     degree
     e_giq = 0;
     e_fiq = 0;
     for tt=1:numavg
-        [xa,wa,fixedNodes,ya] = cappedaccuracy_quad_v3([D,degree],f,Kmax);
+        ya = rand(Kmax,1);
+        [xa,wa,fixedNodes] = cappedaccuracy_quad_v3([D,degree],f,ya);
         [xt,wt,yt] = fixed_implict_quad(degree,Kmax);
         e_giq = e_giq + abs(sum(f(xa).*wa) - mean(f(ya)));
         e_fiq = e_fiq + abs(sum(f(xt).*wt) - mean(f(yt)));
