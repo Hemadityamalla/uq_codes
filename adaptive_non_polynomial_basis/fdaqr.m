@@ -21,7 +21,7 @@
 
 
 function [x,w] = fdaqr(degree,f_marg,L,nodes)
-D = degree(1); N = degree(2);
+D = degree(2); N = degree(1);
 Kmax = length(nodes) + length(L); %Sample size
 Lsize = length(L);
 %Constructing the piecewise linear interpolant
