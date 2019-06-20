@@ -13,7 +13,7 @@
 
 %The following commands can be ran to validate the QR:
 %f = @(x)exp(-x.^2/2)/sqrt(2*pi)
-% N = 5; D = 5;level = 10;samples = rand(5e2,1);[QR] = cappedaccuracy_quad_nested([D,N], level,f, samples);
+% N = 5; D = 2;level = 4;samples = rand(5e2,1);[QR] = cappedaccuracy_quad_nested([D,N], level,f, samples);
 %sum(w) %Must be close to 1.0
 %abs(sum(x.*w)-mean(y)) < 1e-14
 %abs(sum(x.^(N-2).*w) == mean(y.^(N-2))) < 1e-14
