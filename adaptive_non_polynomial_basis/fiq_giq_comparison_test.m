@@ -4,7 +4,7 @@
 clear;clc; format long;
 
 %Sample points
-Kmax = 1e3;
+Kmax = 1e2;
 
 interp_pts = linspace(0,1,25);
 fn = @(x) exp(-x.^2/2/sqrt(2*pi));%(x.*(x < 0.5) + (x >= 0.5).*exp(-5*x)); 
@@ -15,9 +15,9 @@ fnmarker.fnidx = 2; fnmarker.pts = interp_pts;
 
 error_giq = [];
 error_fiq = [];
-D = 75;
+D = 45;
 range = 5:5:D;
-numavg = 10;
+numavg = 5;
 for degree = range
     degree
     e_giq = 0;

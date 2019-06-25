@@ -1,21 +1,26 @@
-%This is trivial and wrong as we are just adding the function evaluations
-%and trying to obtain a quadrature rule for it.
 
-function [x,w,y] = almost_fixed_implict_quad(N,f, Kmax)
-    y = rand(Kmax,1); %Uniform distribution
+%f_deets.fn = @(x,k) (mod(k-1,2)==0).*(x.^((k-1)/2)) + (mod(k-1,2)==1).*(log(x).*x.^(k/2))
+%f_deets.coeffs = 1:N;
+%fmarker = [fnidx, pts];
+%[x,w] = approxgeneral_fixed_implicit_quad(f_deets, fmarker, N, Kmax);
+
+
+function [x,w,y] = approxgeneral_fixed_implicit_quad(fn, N, Kmax)
+    fnidx = fmarker.fnidx; pts = fmarker.pts;
     %Initialize quad rule
+    y = rand(Kmax,1);
     x = y(1:N);
     w = ones(N,1)/(N);
     %Implicit quad rule
+    pp = griddedInterpolant(pts, f_deets.fn(pts, fnidx),'linear');
     for D=N:(Kmax-1)
        %Node addition
        x = [x;y(D+1)];
        w = [((D)/(D+1))*w;1./(D+1)];
        %Update weights
-       V = general_vandermonde(x, @(x,k) x.^(k-1), 1:N);
-       %Replacing the second row with an interpolation of the function
-       V(end,:) = f(x); %This is a bad idea as x keeps changing every iteration and each function evaluation is really expensive
-
+       V = general_vandermonde(x, f_deets.fn, f_deets.coeffs);
+       
+       V(fnidx,:) = pp(x);
        nullVec = null(V);
        c = nullVec(:,1);
 
