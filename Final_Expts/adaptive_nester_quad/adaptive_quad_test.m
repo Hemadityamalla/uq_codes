@@ -1,14 +1,14 @@
 close all;clear;close all;format long;
 
 %points used for piecewise linear interpolation
-Kmax = 2.5e2;
+Kmax = 5e2;
 
 for testFn = 1:6
     error_giq = [];
     error_fiq = [];
-    N = 30;
+    N = 40;
     range = 2:2:N;
-    D = 15;
+    D = 7;
     numavg = 50;
     for degree = range
         degree
