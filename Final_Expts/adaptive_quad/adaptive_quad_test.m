@@ -6,9 +6,10 @@ Kmax = 2.5e2;
 for testFn = 1:6
     error_giq = [];
     error_fiq = [];
-    N = 30;
-    range = 2:2:N;
-    D = 15;
+    N = 40;
+    
+    D = 10;
+    range = D:2:N;
     numavg = 50;
     for degree = range
         degree
@@ -19,8 +20,8 @@ for testFn = 1:6
             %Generating the function
             a = rand(1); u = rand(1); 
             f = genz_fns(0:0.01:1, a, u, testFn);
-            [xa,wa,fixedNodes] = cappedaccuracy_quad_v3([D,degree],f,ya);
-            [xt,wt] = fixed_implict_quad(degree,ya);
+            [xa,wa,fixedNodes] = cappedaccuracy_quad_v3([degree,N],f,ya);
+            [xt,wt] = fixed_implict_quad(N,ya);
             e_giq = e_giq + abs(sum(f(xa).*wa) - mean(f(ya)));
             e_fiq = e_fiq + abs(sum(f(xt).*wt) - mean(f(ya)));
         end
