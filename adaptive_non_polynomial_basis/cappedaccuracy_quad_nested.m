@@ -75,7 +75,7 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
 %         if size(nullVec,2) > 1
 %             size(nullVec,2)
 %         end
-        [alpha1, k1] = min(w(c>0)./c(c>0));
+        [alpha1, k1] = min(w(c>0)./c(c>0));\State Construct a Vandermonde matrix $\mathbf{V}$:
         [alpha2, k2] = max(w(c<0)./c(c<0));
         id1 = find(c > 0);
         id2 = find(c < 0);
@@ -112,7 +112,7 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
     %x
     scatter(x, k_level*ones(length(x),1),10,w,'filled');
     hold on;
-    scatter(0:0.005:1,k_level*ones(length(0:0.005:1),1),2,'k.');
+    scatter(0:0.005:1,k_level*ones(length(0:0.005:1),1),2,'k.');\State Construct a Vandermonde matrix $\mathbf{V}$:
     ylim([0, level+2]);
     hold on;
                                         %---------------Subsequent levels-------------
