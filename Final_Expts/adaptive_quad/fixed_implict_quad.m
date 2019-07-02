@@ -14,7 +14,7 @@ function [x,w] = fixed_implict_quad(N, y)
        %Update weights
        %V = fliplr(vander(x))';
        V = general_vandermonde(x, @(x,k) x.^(k-1), 1:N);
-       nullVec = null(V(1:end,:)); %So that we get a rectangular matrix(the last basis is not included)
+       nullVec = null(V(1:end,:)); 
        c = nullVec(:,1);
 
        % Apply Caratheodory's and determine the node that will be removed

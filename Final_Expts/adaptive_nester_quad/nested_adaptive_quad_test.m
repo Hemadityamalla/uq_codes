@@ -1,14 +1,15 @@
-close all;clear;clc;format long;
+close all;clear;format long;
+set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
 
 %points used for piecewise linear interpolation
 Kmax = 2.5e2;
-
+rng(1,'twister'); %Seeding for reproducibility.
 
 for testFn = 1:6
 
-    lmax = 10;
-    D = 2; N = 5;
-    numavg = 25;
+    lmax = 12;
+    D = 4; N = 5;
+    numavg = 1;
     efiqavg = zeros(lmax,1)'; egiqavg = zeros(lmax,1)';
     for iavg = 1:numavg
         error_giq = [];
