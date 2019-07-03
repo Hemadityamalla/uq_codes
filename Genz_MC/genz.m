@@ -1,4 +1,4 @@
-%Function for the six types of multi-dimensional Genz functions with their exact integral over the range [-1,1]^d
+%Function for the six types of multi-dimensional Genz functions with their exact integral over the range [0,1]^d
 
 
 

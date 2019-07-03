@@ -1,4 +1,5 @@
 close all;clear;close all;format long;
+set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
 
 %points used for piecewise linear interpolation
 Kmax = 2.5e2;
@@ -15,7 +16,7 @@ for testFn = 1:6
     
     D = 10;
     range = D:2:N;
-    numavg = 50;
+    numavg = 10;
     for degree = range
         degree
         e_giq = 0;
@@ -39,7 +40,7 @@ for testFn = 1:6
     end
     
     figure(testFn);
-    semilogy(range(1:end),error_giq(1:end),'bo-',range(1:end),error_fiq(1:end),'r^-', range(1:end), error_mc(1:end),'g*-');
+    loglog(range(1:end),error_giq(1:end),'bo-',range(1:end),error_fiq(1:end),'r^-', range(1:end), error_mc(1:end),'g*-');
     xlabel('Number of nodes');ylabel('Error');
     legend('Approx. integrand','Implicit','Monte Carlo');
     grid on;set(gcf,'Position',[xpos ypos width height]); box on;
