@@ -3,7 +3,7 @@
 
 function main(Qrule, testFn)
 
-    Kmax = 1e2;
+    Kmax = 2.5e2;
 
     
 %Degree/ cardinality of the basis

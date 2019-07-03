@@ -14,9 +14,9 @@ for testFn = 1:6
     error_mc = [];
     N = 30;
     
-    D = 10;
-    range = D:2:N;
-    numavg = 10;
+    D = 12;
+    range = 5:2:N;
+    numavg = 50;
     for degree = range
         degree
         e_giq = 0;
@@ -26,7 +26,7 @@ for testFn = 1:6
             ya = rand(Kmax,1);
             %Generating the function
             a = rand(1); u = rand(1); 
-            f = genz_fns(0:0.01:1, a, u, testFn);
+            f = genz_fns((0:0.01:1), a, u, testFn);
             [xa,wa,fixedNodes] = cappedaccuracy_quad_v3([D,degree],f,ya);
             [xt,wt] = fixed_implict_quad(degree-1,ya); %degree-1 is used because the approx quadrature rule take degree-1 polynomials as well
             e_giq = e_giq + abs(sum(f(xa).*wa) - mean(f(ya)));
