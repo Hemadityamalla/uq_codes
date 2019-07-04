@@ -1,12 +1,12 @@
-clear;clc;format long;
+clear;clc;format long;close all;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
 
-nAvg = 100;
-d = 5;
-for ftype=[1:5]
+nAvg = 10;
+d = 4;
+for ftype=[1:6]
     numpts = [];
     error = [];
-    for i=5*(10.^5)
+    for i=9:2:32
         eval_pts = rand(i,d);
         avgErr = zeros(nAvg,1);
         for nIter = 1:nAvg
@@ -19,7 +19,7 @@ for ftype=[1:5]
         numpts(end+1) = i;
         error(end+1) = mean(avgErr);
     end
+    figure(ftype)
+    loglog(numpts,error,'bo-');
     dlmwrite(strcat('MC_f',num2str(ftype),'.dat'),[numpts',error'],'precision','%2.16f');
 end
-    
-polyfit(log(numpts),log(error),1);
