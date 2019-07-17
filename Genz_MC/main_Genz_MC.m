@@ -2,11 +2,11 @@ clear;clc;format long;close all;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
 
 nAvg = 10;
-d = 4;
+d = 3;
 for ftype=[1:6]
     numpts = [];
     error = [];
-    for i=9:2:32
+    for i=9:2:20
         eval_pts = rand(i,d);
         avgErr = zeros(nAvg,1);
         for nIter = 1:nAvg
@@ -16,7 +16,7 @@ for ftype=[1:6]
             mu = mean(fn);
             avgErr(nIter,1) = abs(mu - exact);
         end
-        numpts(end+1) = i;
+        numpts(end+1) = i^d;
         error(end+1) = mean(avgErr);
     end
     figure(ftype)

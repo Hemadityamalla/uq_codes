@@ -16,7 +16,7 @@ for testFn = 1:6
     
     D = 12;
     range = 5:2:N;
-    numavg = 50;
+    numavg = 5;
     for degree = range
         degree
         e_giq = 0;

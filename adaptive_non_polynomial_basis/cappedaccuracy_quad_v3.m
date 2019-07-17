@@ -89,11 +89,15 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
             continue;       
         elseif isequal(ndel,[1;0]) %k1 cannot be used
             k = k2; alpha = alpha2;
+            
+            
         elseif isequal(ndel,[0;1]) %k2 cannot be used
             k = k1; alpha = alpha1;
+            
         else                        %Either k1,k2 can be used
             %fprintf("Two nodes can be deleted\n");
             k = k1; alpha = alpha1;
+            
         end
         w = w-alpha*c;
         x(k, :) = []; w(k) = [];
