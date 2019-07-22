@@ -110,7 +110,7 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
     
     %fprintf('\n k= %d QR: ',k_level);
     %x
-    scatter(x, k_level*ones(length(x),1),10,w,'filled');
+    scatter(x, k_level*ones(length(x),1),25,w,'filled');
     hold on;
     scatter(0:0.005:1,k_level*ones(length(0:0.005:1),1),2,'k.');
     ylim([0, level]); ylabel('Level');
@@ -199,13 +199,12 @@ pp = griddedInterpolant(sort(nodes), f(sort(nodes)),'linear');
         QR{k_level}.nodes = x; QR{k_level}.weights = w;
         %fprintf('\n k= %d QR: ',k_level);
         %x
-        scatter(x, k_level*ones(length(x),1),16,w,'filled');
+        scatter(x, k_level*ones(length(x),1),25,w,'filled');
         hold on;
         scatter(0:0.005:1,k_level*ones(length(0:0.005:1),1),3,'k.');
         k_level = k_level+1;
     end
-
-    colorbar('northoutside');
+    
 
 
 end
