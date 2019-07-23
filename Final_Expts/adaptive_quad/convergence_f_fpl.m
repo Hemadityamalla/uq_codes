@@ -11,7 +11,7 @@ Y = randn(1e6,1);
 F = Y(1:40,1);
 
 
-fn = genz_fns(0:0.001:1,rand(1,1),rand(1,1), 4); %Test function
+fn = genz_fns(0:0.001:1,rand(1,1),rand(1,1), 5); %Test function
 
 fpl = griddedInterpolant(sort(F),fn(sort(F)),'linear'); %Function interpolant
 

@@ -19,10 +19,12 @@ function main(Qrule, testFn)
         case 3
          %x^k
         f_deets.fn = @(x,k) x.^(k-1); f_deets.coeffs = 1:N; 
+            case 4
+                f_deets.fn = @(x,k) cos((k-1).*x); f_deets.coeffs = 1:N;
         end
         
         mean_error = 0.0;
-        Navg = 50;
+        Navg = 5;
         for iter = 1:Navg
             %Generalized Implicit Quadrature rule
             [x,w,y] = general_fixed_implicit_quad(f_deets, N, Kmax);
