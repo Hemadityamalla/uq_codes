@@ -1,5 +1,5 @@
 clear;clc; format long;close all;
-xpos = 500;ypos = 500; width = 800; height = 800;
+xpos = 500;ypos = 500; width = 1000; height = 800;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
 
 

@@ -6,7 +6,7 @@ Kmax = 2.5e2;
 rng(1,'twister'); %Seeding for reproducibility.
 
 
-xpos = 500;ypos = 500; width = 1000; height = 800;
+xpos = 500;ypos = 500; width = 800; height = 800;
 
 for testFn = 1:6
     error_giq = [];
@@ -16,7 +16,7 @@ for testFn = 1:6
     
     D = 12;
     range = 5:2:N;
-    numavg = 5;
+    numavg = 50;
     for degree = range
         degree
         e_giq = 0;

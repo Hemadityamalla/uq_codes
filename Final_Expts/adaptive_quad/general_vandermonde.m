@@ -6,4 +6,4 @@ function V = general_vandermonde(pts, basis, params)
     for idx=1:length(params)
         V(idx,:) = basis(pts, params(idx));
     end
-end
+    end
