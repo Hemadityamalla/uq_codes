@@ -8,7 +8,7 @@ xpos = 500;ypos = 500; width = 1000; height = 800;
 rng(1,'twister');
 
 
-fn = genz_fns(0:0.001:1,rand(1,1),rand(1,1), 6);
+fn = genz_fns(0:0.001:1,rand(1,1),rand(1,1), 5);
 Y = rand(1e6,1);
 D = 10;
 F = Y(1:D,1);
