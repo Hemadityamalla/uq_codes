@@ -9,7 +9,7 @@ Kmax = 80;
 rng(1,'twister'); %Seeding for reproducibility.
 
 %dimension 
-d = 3; %Can't go to 5
+d = 4; %Can't go to 5
 
 for fnType = 1:6
     
@@ -20,7 +20,7 @@ for fnType = 1:6
     fn = genz_fns(testpts, a, u, fnType);
     error = [];
     range = 5:2:20;
-    numavg =  10;
+    numavg =  50;
     for N=range
         err = 0;
         N
@@ -35,10 +35,10 @@ for fnType = 1:6
         error(end+1) = err/numavg;
     end
     %Loading data
-    data_MC = dlmread(strcat('MC_f',num2str(fnType),'.dat'));
-    data_tensor = dlmread(strcat('Tensor_f',num2str(fnType),'d',num2str(d),'.dat'));
+    %data_MC = dlmread(strcat('MC_f',num2str(fnType),'.dat'));
+    %data_tensor = dlmread(strcat('Tensor_f',num2str(fnType),'d',num2str(d),'.dat'));
     figure(fnType);
-    loglog(range(1:end).^d,error(1:end),'bo-',data_MC(1:end,1),data_MC(1:end,2),'r^-', data_tensor(1:end,1), data_tensor(1:end,2),'g*-');
+    loglog(range(1:end).^d,error(1:end),'bo-')%,data_MC(1:end,1),data_MC(1:end,2),'r^-', data_tensor(1:end,1), data_tensor(1:end,2),'g*-');
     xlabel('Number of nodes');ylabel('Error');
     legend('Approx. integrand','Monte Carlo','Tensor grid');
     grid on;set(gcf,'Position',[xpos ypos width height]); box on;
