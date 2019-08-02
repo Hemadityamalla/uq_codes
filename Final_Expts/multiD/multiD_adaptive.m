@@ -11,7 +11,7 @@ function [X,W] = multiD_adaptive(f, N, D, S, Y, dim)
         QR{i_dim}.nodes = x'; QR{i_dim}.weights = w';
     end
     if dim == 1
-        X = x;W = w;
+        X = x';W = w';
     else
         X = QR{1}.nodes; W = QR{1}.weights;
         for i_dim=2:dim

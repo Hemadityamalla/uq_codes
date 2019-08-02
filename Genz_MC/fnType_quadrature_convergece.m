@@ -18,7 +18,7 @@ for fntype = 1:6
       [fn, exact] = genz(x,a,u,fntype);
       error(end+1) = abs(exact - sum(fn.*w'));
    end
-   loglog(N, error,'o-');
+   loglog(N, error+1e-17,'o-');
    hold on;
 end
 legend('f_1','f_2','f_3','f_4','f_5','f_6');ylabel('Absolute Error');xlabel('Nodes')

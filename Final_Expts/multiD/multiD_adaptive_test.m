@@ -16,7 +16,8 @@ for fnType = 1:6
     %Test functions to be integrated
     a = rand(d,1);
     u = rand(d,1);
-    fn = genz_fns(0:0.001:1, a, u, fnType);
+    testpts = rand(10,d);
+    fn = genz_fns(testpts, a, u, fnType);
     error = [];
     range = 5:2:20;
     numavg =  10;

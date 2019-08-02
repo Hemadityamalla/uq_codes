@@ -13,8 +13,22 @@ N = chebop(@(x, u) diff(u,2) + f*diff(u) + 35*0.5*u.^3 - 15*0.5*u, [0, 10]);
 
 
 % %This is the Monte-Carlo approach
-xi = rand(5e3,1);
-ic = 0.05 + 0.2*(-1 + 2*xi);
+% xi = rand(5e3,1);
+% ic = 0.05 + 0.2*(-1 + 2*xi);
+% QoI = [];
+% for iter=1:length(ic)
+% N.lbc = [ic(iter); 0];
+% u = N\0;
+% QoI(end+1) = u(end);
+% end
+
+
+%Pseudo-spectral Approach 
+
+[xi, w] = legpts(100); %Degree 19
+
+ic = 0.05 + 0.2*(xi);
+
 QoI = [];
 for iter=1:length(ic)
 N.lbc = [ic(iter); 0];
@@ -22,21 +36,7 @@ u = N\0;
 QoI(end+1) = u(end);
 end
 
-
-%Pseudo-spectral Approach 
-
-% [xi, w] = legpts(20); %Degree 19
-% 
-% ic = 0.05 + 0.2*(xi);
-% 
-% QoI = [];
-% for iter=1:length(ic)
-% N.lbc = [ic(iter); 0];
-% u = N\0;
-% QoI(end+1) = u(end);
-% end
-% 
-% fhat = gpc_coeffs(3, xi, 0.5*w', QoI', 'legendre');
+fhat = gpc_coeffs(3, xi, w', QoI', 'legendre');
 
 %eval_pts = (-0.15:0.01:0.25)'; 
 %plot(eval_pts, gpc_polyval(fhat, eval_pts, 'legendre'));

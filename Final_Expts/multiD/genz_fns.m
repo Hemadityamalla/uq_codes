@@ -12,9 +12,9 @@ switch type
         %exact = (2^d/prod(a))*cos(0.5*sum(a) + 2*pi*u(1))*prod(sin(0.5*a));
     case 2
         %product peak
-        unew = repmat(u',[npts,1]);
-        anew = repmat(a',[npts,1]);
-        fn = @(x) prod(1./((anew.^(-2) + (x - unew).^2)),2);
+        %unew = repmat(u',[npts,1]);
+        %anew = repmat(a',[npts,1]);
+        fn = @(x) prod(1./((a'.^(-2) + (x - u').^2)),2);
         %exact = prod(a.*(atan(a.*u) + atan(a - a.*u)));
     case 3
         %Corner peak
@@ -27,8 +27,7 @@ switch type
         %exact = prod(1./(1:d))*(1./prod(a))*sum(((-1).^(sum(combos,2))).*(1 + combos*a).^(-1));
     case 4
         %Gaussian
-        unew = repmat(u',[npts,1]);
-        fn = @(x) exp(-((x - unew).^2)*(a).^2);
+        fn = @(x) exp(-((x - u').^2)*(a).^2);
         %exact = ((sqrt(pi)/2)^d)*prod(erf(a.*(1-u)) + erf(a.*u))/prod(a);
     case 5
         %C0 fn
@@ -37,8 +36,8 @@ switch type
         %exact = (1/prod(a))*prod((1 - exp(-a*ploc)) + (1 - exp(-a*(1-ploc))));
     case 6
         %Discontinuous function
-        unew = repmat(u',[npts,1]);
-        fn = @(x) (prod(x <= unew,2)>0).*exp(x*a);
+        %unew = repmat(u',[npts,1]);
+        fn = @(x) (prod(x <= u',2)>0).*exp(x*a);
         %exact = prod(1./a)*prod(exp(a.*u) - 1);
         
 end
