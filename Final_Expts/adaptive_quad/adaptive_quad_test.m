@@ -8,7 +8,7 @@ rng(1,'twister'); %Seeding for reproducibility.
 
 xpos = 500;ypos = 500; width = 800; height = 800;
 
-for testFn = 6
+for testFn = 5
     error_giq = [];
     ngiq = [];
     error_fiq = [];
@@ -17,7 +17,7 @@ for testFn = 6
     
     D = 12;
     range = 5:5:N;
-    numavg = 50;
+    numavg = 15;
     for degree = range
         degree
         e_giq = 0;

@@ -5,13 +5,13 @@ set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWi
 
 
 %points used for piecewise linear interpolation
-Kmax = 80;
+Kmax = 50;
 rng(1,'twister'); %Seeding for reproducibility.
 
 %dimension 
-d = 4; %Can't go to 5
+d = 2; %Can't go to 5
 
-for fnType = 1:6
+for fnType = 3
     
     %Test functions to be integrated
     a = rand(d,1);
@@ -19,8 +19,8 @@ for fnType = 1:6
     testpts = rand(10,d);
     fn = genz_fns(testpts, a, u, fnType);
     error = [];
-    range = 5:2:20;
-    numavg =  50;
+    range = 5:2:10;
+    numavg =  5;
     for N=range
         err = 0;
         N
