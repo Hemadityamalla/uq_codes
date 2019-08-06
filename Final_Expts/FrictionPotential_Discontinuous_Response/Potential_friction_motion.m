@@ -1,8 +1,8 @@
 %Script solving the stochastic particle moving in a potential field with
 %friction
 function fevals = Potential_friction_motion(eval_pts)
-addpath('/home/hemaditya/Documents/chebfun'); %Adding chebfun if not added
-%addpath('/ufs/hemadity/Documents/chebfun');
+%addpath('/home/hemaditya/Documents/chebfun'); %Adding chebfun if not added
+addpath('/ufs/hemadity/Documents/chebfun');
 
 
 f = 2; %Larger this value, faster the steady state is reached

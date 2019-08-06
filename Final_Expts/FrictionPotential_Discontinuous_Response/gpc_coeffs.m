@@ -7,7 +7,7 @@ if strcmp(type, 'hermite')
     end
     
 elseif strcmp(type, 'legendre')
-    gamma = 2.0./(2*(0:degree) + 1.0);
+    gamma = 1.0./(2*(0:degree) + 1.0); %2.0./(2*(0:degree) + 1.0) -- use when w(x)=1 or [0,1].
     for ii=1:degree+1
        poly =  legendre(nodes, ii-1);
        %gamma = sum(poly.*poly.*weights);

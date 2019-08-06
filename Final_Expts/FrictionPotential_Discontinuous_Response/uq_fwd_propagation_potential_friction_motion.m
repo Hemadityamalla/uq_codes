@@ -1,6 +1,6 @@
 clear;clc;close all;format long;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
-%addpath('/ufs/hemadity/Documents/chebfun');
+addpath('/ufs/hemadity/Documents/chebfun');
 xpos = 500;ypos = 500; width = 1000; height = 800;
 %rng(1,'twister');
 
@@ -11,12 +11,13 @@ data = dlmread('MC_fevals.dat');
 
 %Pseudo-spectral Approach
 N = 5*[1,2,4,8,16,32];
-exactmean = mean(data(:,2));%0.16366;
+exactmean = 0.163663;
+exactstd = 0.633865691;
 err = [];err_std = [];
 mu = []; std_sq = []; 
-Kmax = 1e6; y = data(:,1);%-1 + 2*rand(Kmax,1);
+Kmax = 1e6; y = data(1:1e3,1);%-1 + 2*rand(Kmax,1);
 
-D = 7; %Input for the adaptivequad
+D = 10; %Input for the adaptivequad
 for i=N
     i
 [xi,w] = legpts(i); w = 0.5*w;
@@ -38,6 +39,6 @@ mu(end+1) = sum(QoI.*(w)');
 %gamma = 2.0./(2*(0:expansionDegree)' + 1.0);
 std_sq(end+1) = sum((QoI - mu(end)).^2.*(w)');
 err(end+1) = abs(exactmean - mu(end));
-err_std(end+1) = abs(std(data(:,2)) - sqrt(std_sq(end)));
+err_std(end+1) = abs(exactstd - sqrt(std_sq(end)));
 end
 loglog(N,err,'r-o',N,err_std,'r-*');
