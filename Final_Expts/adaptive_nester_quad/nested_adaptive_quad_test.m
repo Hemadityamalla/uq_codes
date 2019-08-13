@@ -8,7 +8,7 @@ rng(1,'twister'); %Seeding for reproducibility.
 xpos = 500;ypos = 500; width = 1000; height = 800;
 
 
-for testFn = 1:6
+for testFn = 5
 
     lmax = 8;
     D = 4; N = 5;

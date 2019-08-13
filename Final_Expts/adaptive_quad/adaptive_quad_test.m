@@ -1,4 +1,4 @@
-close all;clear;close all;format long;
+close all;clear;format long;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
 
 %points used for piecewise linear interpolation
@@ -13,11 +13,11 @@ for testFn = 5
     ngiq = [];
     error_fiq = [];
     error_mc = [];
-    N = 35;
+    N = 30;
     
-    D = 12;
+    D = 10;
     range = 5:5:N;
-    numavg = 15;
+    numavg = 1;
     for degree = range
         degree
         e_giq = 0;
@@ -29,6 +29,10 @@ for testFn = 5
             a = rand(1); u = rand(1); 
             f = genz_fns((0:0.01:1), a, u, testFn);
             [xa,wa,fixedNodes] = cappedaccuracy_quad_v3([D,degree],f,ya);
+            %nodes = ya(1:D); L = setdiff(ya, nodes,'stable');
+            %evals = f(nodes);
+            %[xa,wa] = fdaqr([degree,D], fevals, L, nodes);
+            
             [xt,wt] = fixed_implict_quad(length(xa)-1,ya); %degree-1 is used because the approx quadrature rule take degree-1 polynomials as well
             e_giq = e_giq + abs(sum(f(xa).*wa) - mean(f(ya)));
             e_fiq = e_fiq + abs(sum(f(xt).*wt) - mean(f(ya)));
