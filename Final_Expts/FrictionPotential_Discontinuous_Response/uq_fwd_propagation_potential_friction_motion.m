@@ -1,6 +1,7 @@
 clear;clc;close all;format long;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
 addpath('/ufs/hemadity/Documents/chebfun');
+addpath('/home/hemaditya/Documents/chebfun');
 xpos = 500;ypos = 500; width = 1000; height = 800;
 %rng(1,'twister');
 
@@ -50,3 +51,4 @@ err_std(end+1) = abs(exactstd - sqrt(std_sq(end)));
 end
 figure(2)
 loglog(N,err,'r-o',N,err_std,'r-*');
+

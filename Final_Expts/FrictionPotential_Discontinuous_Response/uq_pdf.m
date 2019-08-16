@@ -1,6 +1,6 @@
 clear;clc;close all;format long;
 set(0,'DefaultAxesFontSize',16,'DefaultAxesFontWeight','bold','DefaultLineLineWidth',2,'DefaultLineMarkerSize',8);
-addpath('/ufs/hemadity/Documents/chebfun');
+addpath('/home/hemaditya/Documents/chebfun');
 xpos = 500;ypos = 500; width = 1000; height = 800;
 %rng(1,'twister');
 
@@ -19,7 +19,7 @@ QoI2 = Potential_friction_motion(setdiff(xi, nodes));
 
 QoI = [QoI2;QoI];
 
-fhat = gpc_coeffs(11, xi, w', QoI, 'legendre');
+fhat = gpc_coeffs(3, xi, w', QoI, 'legendre');
 samples = -1 + 2*rand(1e7,1);
 Xevals = gpc_polyval(fhat, samples, 'legendre');
 figure(1)
