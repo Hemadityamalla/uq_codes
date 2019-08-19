@@ -20,11 +20,15 @@ end
 N = 2:2:30;
 for ifn = 1:6
     figure(ifn)
-    for ires = 1:4
+    for ires = [1,2,3,5,6]
         data = dlmread(strcat('Errors_quad',num2str(ires),'_fn',num2str(ifn),'.dat'));
-        loglog(N,data(:,1),'-o'); xlim([2,30]); 
+        if ires == 5 || ires == 6
+            loglog(data(:,1), data(:,2),'-o'); xlim([2,30]);
+        else
+            loglog(N,data(:,1),'-o'); xlim([2,30]);
+        end
         hold on;        
     end
-    %xlabel('N');ylabel('Absolute error');legend('logarithmic','sinusoidal','polynomial');
+    xlabel('N');ylabel('Absolute error');legend('\beta_1','\beta_2','monomial (\beta_3)','\beta_4','\beta_5');
     hold on;grid on;set(gcf,'Position',[xpos ypos width height]); box on;
 end
