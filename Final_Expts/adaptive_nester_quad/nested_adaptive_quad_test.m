@@ -8,7 +8,7 @@ rng(1,'twister'); %Seeding for reproducibility.
 xpos = 500;ypos = 500; width = 1000; height = 800;
 
 
-for testFn = 5
+for testFn = 1:6
 
     lmax = 8;
     D = 4; N = 5;
@@ -38,6 +38,6 @@ for testFn = 5
     figure(testFn);
     loglog(nnodes,egiqavg/numavg,'bo-',nnodes,efiqavg/numavg,'r+-');
     xlabel('Number of nodes/levels');ylabel('Error');
-    legend('adaptive','fixed');
+    legend('Nested approx. response','Implicit');
     grid on;set(gcf,'Position',[xpos ypos width height]); box on;
 end
