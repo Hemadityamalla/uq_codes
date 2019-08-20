@@ -15,9 +15,9 @@ for testFn = 5
     error_mc = [];
     N = 30;
     
-    D = 10;
-    range = 5:5:N;
-    numavg = 1;
+    D = 12;
+    range = 5:2:N;
+    numavg = 25;
     for degree = range
         degree
         e_giq = 0;
@@ -28,10 +28,10 @@ for testFn = 5
             %Generating the function
             a = rand(1); u = rand(1); 
             f = genz_fns((0:0.01:1), a, u, testFn);
-            [xa,wa,fixedNodes] = cappedaccuracy_quad_v3([D,degree],f,ya);
-            %nodes = ya(1:D); L = setdiff(ya, nodes,'stable');
-            %evals = f(nodes);
-            %[xa,wa] = fdaqr([degree,D], fevals, L, nodes);
+            %[xa,wa,fixedNodes] = cappedaccuracy_quad_v3([D,degree],f,ya);
+            nodes = ya(1:D); L = setdiff(ya, nodes,'stable');
+            fevals = f(nodes);
+            [xa,wa] = fdaqr([degree,D], fevals, L, nodes);
             
             [xt,wt] = fixed_implict_quad(length(xa)-1,ya); %degree-1 is used because the approx quadrature rule take degree-1 polynomials as well
             e_giq = e_giq + abs(sum(f(xa).*wa) - mean(f(ya)));
@@ -46,7 +46,7 @@ for testFn = 5
     end
     
     figure(testFn);
-    loglog(ngiq,error_giq(1:end),'bo-',range(1:end),error_fiq(1:end),'r^-', range(1:end), error_mc(1:end),'g*-');
+    loglog(range(1:end),error_giq(1:end),'bo-',range(1:end),error_fiq(1:end),'r^-', range(1:end), error_mc(1:end),'g*-');
     xlabel('Number of nodes');ylabel('Error');
     legend('Approx. integrand','Implicit','Monte Carlo');
     grid on;set(gcf,'Position',[xpos ypos width height]); box on;

@@ -14,6 +14,7 @@ d = 10; sigma = 1 ;
 mc_mean = [];
 
 n = 5*logspace(1,4,100);
+c = parula(length(n));c_iter = 1;
 for sim = n
     for jj=[1:1:sim]
         xi = randn(d,1);
@@ -30,16 +31,16 @@ for sim = n
         b(1) = -(cmid(1)/(dx^2))*T_left;
         u = A\b;
         
-%         if ~mod(jj,1e3)
-%             plot(x,[1;u;0]);
-%             hold on;
-%         end
+        if ~mod(jj,5e3)
+            plot(x,[1;u;0],'Color',c(c_iter,:));
+            hold on;
+            c_iter = c_iter+1;
+        end
         T_half(jj,1) = u(N/2);
             
     end
     mc_mean = [mc_mean, mean(T_half)];
 end
-% 
 figure(2)
 semilogx(n,mc_mean,'b.-');
 hold on;
