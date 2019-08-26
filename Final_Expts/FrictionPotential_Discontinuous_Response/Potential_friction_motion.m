@@ -14,6 +14,8 @@ for iter=1:length(ic)
 N.lbc = [ic(iter); 0];
 u = N\0;
 fevals(iter,1) = u(end);
+plot(u);
+hold on;
 end
 
 

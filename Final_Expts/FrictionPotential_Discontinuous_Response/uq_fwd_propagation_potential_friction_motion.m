@@ -11,7 +11,7 @@ data = dlmread('data_t2.dat');
 %exact_soln = @(x) (x > -0.25)*(sqrt(15/35)) - (x < -0.25)*(sqrt(15/35));
 
 %Pseudo-spectral Approach
-N = 5:5:30;
+N = 6:2:24;
 exactmean = mean(data(:,2));%0.163663;
 exactstd = std(data(:,2));%0.633865691;
 err = [];err_std = [];
@@ -21,28 +21,28 @@ Kmax = 1e6; y = data(:,1);%-1 + 2*rand(Kmax,1);
 D = 5; %Input for the adaptivequad
 for i=N
     i
-%[xi,w] = legpts(i); w = 0.5*w;
+[xi,w] = legpts(i); w = 0.5*w;
 %[xi, w] = fixed_implict_quad(i,y);w=w';
-%QoI = Potential_friction_motion(xi);
+QoI = Potential_friction_motion(xi);
 %Solving the model as a blackbox
 
 
-nodes = y(1:D);L = setdiff(y,nodes,'stable');
-QoI = Potential_friction_motion(nodes);
+%nodes = y(1:D);L = setdiff(y,nodes,'stable');
+%QoI = Potential_friction_motion(nodes);
 % figure(1)
 % fpl = griddedInterpolant(sort(nodes),sort(QoI));
 % plot(sort(y), fpl(sort(y)),'r',sort(y), exact_soln(sort(y)));
 % hold on;
 
 
-[xi,w] = fdaqr([i,D], QoI, L, nodes); w = w';
-QoI2 = Potential_friction_motion(setdiff(xi, nodes,'stable'));
+%[xi,w] = fdaqr([i,D], QoI, L, nodes); w = w';
+%QoI2 = Potential_friction_motion(setdiff(xi, nodes,'stable'));
 
 %Postprocessing--- gPC of the output
 expansionDegree = 3;
 
 %fhat = gpc_coeffs(expansionDegree, xi, w', [QoI2;QoI], 'legendre');
-QoI = [QoI2;QoI];
+%QoI = [QoI2;QoI];
 mu(end+1) = sum(QoI.*(w)');
 %gamma = 2.0./(2*(0:expansionDegree)' + 1.0);
 std_sq(end+1) = sum((QoI - mu(end)).^2.*(w)');

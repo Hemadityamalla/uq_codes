@@ -9,7 +9,7 @@ Kmax = 80;
 rng(1,'twister'); %Seeding for reproducibility.
 
 %dimension 
-d = 3; %Can't go to 5
+d = 5; %Can't go to 5
 
 for fnType = 1:6
     
