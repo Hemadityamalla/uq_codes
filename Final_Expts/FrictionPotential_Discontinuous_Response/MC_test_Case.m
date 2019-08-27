@@ -5,7 +5,7 @@ xpos = 500;ypos = 500; width = 1000; height = 800;
 rng(1,'twister');
 
 
-Kmax = 1e5; y = -1 + 2*rand(Kmax,1);
+Kmax = 1e6; y = -1 + 2*rand(Kmax,1);
 QoI = [];
 %Monte Carlo approach for exact value
 
