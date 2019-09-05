@@ -7,10 +7,10 @@ if strcmp(type, 'hermite')
     end
     
 elseif strcmp(type, 'legendre')
-    gamma = 2.0/(2*(0:degree) + 1.0);
+    gamma = 1.0./(2*(0:degree) + 1.0);
     for ii=1:degree+1
        poly =  legendre(nodes, ii-1);
-       coeffs(ii,1) = sum(weights.*poly.*fn)/gamma(ii); 
+       coeffs(ii,1) = sum(weights'.*poly.*fn)/gamma(ii); 
     end
 else
     error('Wrong basis!');
